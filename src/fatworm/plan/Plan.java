@@ -15,8 +15,6 @@ public interface Plan {
 
     public void setPlan(Plan p);
 
-    public Plan down();
-
     public void renameTable(String from, String to);
 
     public HashSet<String> getAllTblNames();

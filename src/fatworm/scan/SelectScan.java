@@ -87,19 +87,14 @@ public class SelectScan implements UpdateScan {
     }
 
     @Override
-    public Scan getParent() {
-        return father;
-    }
-
-    @Override
-    public Const getColumn(Expression expr, boolean findFather) {
-        Const c = s.getColumn(expr, findFather);
+    public Const getColumn(Expression expr, boolean findParent) {
+        Const c = s.getColumn(expr, findParent);
         return c;
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findFather) {
-        int t = s.getColumnType(expr, findFather);
+    public int getColumnType(Expression expr, boolean findParent) {
+        int t = s.getColumnType(expr, findParent);
         return t;
     }
 

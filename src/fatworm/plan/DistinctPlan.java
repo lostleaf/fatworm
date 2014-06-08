@@ -37,12 +37,6 @@ public class DistinctPlan implements Plan {
 	}
 
 	@Override
-	public Plan down() {
-		p = p.down();
-		return this;
-	}
-
-	@Override
 	public void renameTable(String from, String to) {
 		p.renameTable(from, to);
 	}

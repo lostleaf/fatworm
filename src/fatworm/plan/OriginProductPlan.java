@@ -40,12 +40,6 @@ public class OriginProductPlan implements Plan {
 	}
 
 	@Override
-	public Plan down() {
-		for (int i = 0; i < plans.size(); ++i) plans.set(i, plans.get(i).down());
-		return this;
-	}
-
-	@Override
 	public void renameTable(String from, String to) {
         for (Plan plan : plans) plan.renameTable(from, to);
 	}

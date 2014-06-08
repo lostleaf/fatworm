@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.StringConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -19,7 +19,7 @@ public class CharType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.getStrSize(length);
+        return TypeUtil.getStrSize(length);
     }
 
     @Override

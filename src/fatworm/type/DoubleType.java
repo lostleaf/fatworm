@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.DoubleConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -13,7 +13,7 @@ public class DoubleType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.DOUBLE_SIZE + Lib.INT_SIZE;
+        return TypeUtil.DOUBLE_SIZE + TypeUtil.INT_SIZE;
     }
 
     @Override

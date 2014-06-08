@@ -46,11 +46,6 @@ public class TablePlan implements Plan {
     }
 
     @Override
-    public Plan down() {
-        return this;
-    }
-
-    @Override
     public void renameTable(String from, String to) {
     }
 

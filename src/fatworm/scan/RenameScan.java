@@ -92,23 +92,18 @@ public class RenameScan implements Scan {
     }
 
     @Override
-    public Scan getParent() {
-        return father;
-    }
-
-    @Override
-    public Const getColumn(Expression expr, boolean findFather) {
+    public Const getColumn(Expression expr, boolean findParent) {
         int index = getColumnIndex(expr);
         if (index != notFound) return getColumn(index);
-        if (father == null || !findFather) return null;
+        if (father == null || !findParent) return null;
         return father.getColumn(expr, true);
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findFather) {
+    public int getColumnType(Expression expr, boolean findParent) {
         int index = getColumnIndex(expr);
         if (index != notFound) return getColumnType(index);
-        if (father == null || !findFather) return notFound;
+        if (father == null || !findParent) return notFound;
         return father.getColumnType(expr, true);
     }
 

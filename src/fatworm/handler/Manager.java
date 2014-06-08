@@ -25,7 +25,9 @@ public class Manager {
                 System.err.println("init error!");
                 e.printStackTrace();
             }
-        } else dbManager = new DBManager();
+        }
+        if(dbManager == null)
+         dbManager = new DBManager();
 //        System.out.println(dbManager);
     }
 

@@ -92,18 +92,13 @@ public class ExtendScan implements Scan {
 		return null;
 	}
 
-	@Override
-	public Scan getParent() {
-		return father;
-	}
-
-	@Override
-	public Const getColumn(Expression exp, boolean findFather) {
+    @Override
+	public Const getColumn(Expression exp, boolean findParent) {
 		int colCount = getColumnCount();
 		if (Compare.equalCol(getTableName(colCount - 1), getFieldName(colCount - 1), exp)) {
 			return expr.getResult(s);
 		}
-		Const c = s.getColumn(exp, findFather);
+		Const c = s.getColumn(exp, findParent);
 		return c;
 //		if (c != null || (!(s instanceof TableScan))) return c;
 //		if (father == null) return null;
@@ -111,12 +106,12 @@ public class ExtendScan implements Scan {
 	}
 
 	@Override
-	public int getColumnType(Expression exp, boolean findFather) {
+	public int getColumnType(Expression exp, boolean findParent) {
 		int colCount = getColumnCount();
 		if (Compare.equalCol(getTableName(colCount - 1), getFieldName(colCount - 1), exp)) {
 			return expr.getType(s);
 		}
-		int t = s.getColumnType(exp, findFather);
+		int t = s.getColumnType(exp, findParent);
 		return t;
 //		if (t != notFound || (!(s instanceof TableScan))) return t;
 //		if (father == null) return notFound;

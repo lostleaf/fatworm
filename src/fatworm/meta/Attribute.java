@@ -23,9 +23,6 @@ import java.util.ArrayList;
 public class Attribute implements Serializable {
     private String tblName, attrName;
     private Const defaultValue;
-    private boolean primary;
-    private boolean mustNull;
-    private boolean mustNotNull;
     private boolean autoIncrement;
     private Type type;
 
@@ -35,17 +32,8 @@ public class Attribute implements Serializable {
         this.attrName = attrName.toLowerCase();
         this.type = type;
         this.defaultValue = defaultValue;
-        this.mustNull = mustNull;
-        this.mustNotNull = mustNotNull;
         this.autoIncrement = autoIncre;
-        this.primary = false;
-        if (autoIncre) {
-            this.defaultValue = new IntegerConst(0);
-        }
-    }
-
-    public void setPrimary() {
-        primary = true;
+        if (autoIncre) this.defaultValue = new IntegerConst(0);
     }
 
     public String getTblName() {
@@ -60,30 +48,12 @@ public class Attribute implements Serializable {
         return type;
     }
 
-    public Const getDefaultValue() {
-        return defaultValue;
-    }
-
-    public boolean isMustNull() {
-        return mustNull;
-    }
-
-    public boolean isMustNotNull() {
-        return mustNotNull;
-    }
-
-    public boolean isPrimary() {
-        return primary;
-    }
-
     public boolean isAutoIncrement() {
         return autoIncrement;
     }
 
     public Const getDefaultConstant() {
-        if (autoIncrement) {
-            defaultValue = defaultValue.binaryOp(new IntegerConst(1), Operator.PLUS);
-        }
+        if (autoIncrement) defaultValue = defaultValue.binaryOp(new IntegerConst(1), Operator.PLUS);
         return defaultValue.copy();
     }
 
@@ -94,9 +64,7 @@ public class Attribute implements Serializable {
         switch (type.getType()) {
             case Types.INTEGER:
                 c = c.toIntegerConst();
-                if (autoIncrement) {
-                    defaultValue = defaultValue.operate(c, Function.MAX);
-                }
+                if (autoIncrement) defaultValue = defaultValue.operate(c, Function.MAX);
                 return c;
             case Types.CHAR:
             case Types.VARCHAR:

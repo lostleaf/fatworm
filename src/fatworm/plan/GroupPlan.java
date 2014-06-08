@@ -56,11 +56,6 @@ public class GroupPlan implements Plan {
         this.p = p;
     }
 
-    @Override
-    public Plan down() {
-        p = p.down();
-        return this;
-    }
 
     @Override
     public void renameTable(String from, String to) {

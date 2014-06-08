@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.IntegerConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -13,8 +13,8 @@ public class IntegerType implements Type {
 
     @Override
     public int getLength() {
-//		return Lib.INT_SIZE + Lib.INT_SIZE;
-        return Lib.INT_SIZE;
+//		return TypeUtil.INT_SIZE + TypeUtil.INT_SIZE;
+        return TypeUtil.INT_SIZE;
     }
 
     @Override

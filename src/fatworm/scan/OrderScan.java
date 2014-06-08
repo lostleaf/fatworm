@@ -131,15 +131,10 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public Scan getParent() {
-        return father;
-    }
-
-    @Override
-    public Const getColumn(Expression expr, boolean findFather) {
+    public Const getColumn(Expression expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return nowItem.get(idx);
-        if (father == null || !findFather) return null;
+        if (father == null || !findParent) return null;
         return father.getColumn(expr, true);
 //		if (!(s instanceof TableScan)) return null;
 //		if (father == null) return null;
@@ -147,10 +142,10 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findFather) {
+    public int getColumnType(Expression expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return getColumnType(idx);
-        if (father == null || !findFather) return notFound;
+        if (father == null || !findParent) return notFound;
         return father.getColumnType(expr, true);
 //		if (!(s instanceof TableScan)) return notFound;
 //		if (father == null) return notFound;

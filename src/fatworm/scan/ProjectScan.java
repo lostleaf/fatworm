@@ -92,8 +92,8 @@ public class ProjectScan implements Scan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findFahter) {
-        int type = scan.getColumnType(expr, findFahter);
+    public int getColumnType(Expression expr, boolean findParent) {
+        int type = scan.getColumnType(expr, findParent);
         if (type != notFound) return type;
         return notFound;
     }
@@ -115,8 +115,8 @@ public class ProjectScan implements Scan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findFather) {
-        Const c = scan.getColumn(expr, findFather);
+    public Const getColumn(Expression expr, boolean findParent) {
+        Const c = scan.getColumn(expr, findParent);
         if (c != null) return c;
         return null;
 //		if (parent == null || !(s instanceof TableScan)) return null;
@@ -138,11 +138,6 @@ public class ProjectScan implements Scan {
     public String getTableName(int columnIndex) {
         if (columnIndex < firstItem) return scan.getTableName(columnIndex);
         return projs.get(columnIndex - firstItem).getTblName();
-    }
-
-    @Override
-    public Scan getParent() {
-        return parent;
     }
 
     @Override

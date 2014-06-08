@@ -120,18 +120,13 @@ public class ProductScan implements Scan {
 		}
 	}
 
-	@Override
-	public Scan getParent() {
-		return father;
-	}
-
-	@Override
-	public Const getColumn(Expression expr, boolean findFather) {
+    @Override
+	public Const getColumn(Expression expr, boolean findParent) {
 		Const c = s1.getColumn(expr, false);
 		if (c != null) return c;
-		c = s2.getColumn(expr, findFather);
+		c = s2.getColumn(expr, findParent);
 		if (c != null) return c;
-		if (findFather) {
+		if (findParent) {
 			c = s1.getColumn(expr, true);
 			if (c != null) return c;
 		}
@@ -139,12 +134,12 @@ public class ProductScan implements Scan {
 	}
 
 	@Override
-	public int getColumnType(Expression expr, boolean findFather) {
+	public int getColumnType(Expression expr, boolean findParent) {
 		int type = s1.getColumnType(expr, false);
 		if (type != notFound) return type;
-		type = s2.getColumnType(expr, findFather);
+		type = s2.getColumnType(expr, findParent);
 		if (type != notFound) return type;
-		if (findFather) {
+		if (findParent) {
 			type = s1.getColumnType(expr, true);
 			if (type != notFound) return type;
 		}

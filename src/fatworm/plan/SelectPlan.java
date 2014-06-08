@@ -41,11 +41,6 @@ public class SelectPlan implements Plan {
     }
 
     @Override
-    public Plan down() {
-        return this;
-    }
-
-    @Override
     public void renameTable(String from, String to) {
         plan.renameTable(from, to);
         pred.renameTable(from, to);

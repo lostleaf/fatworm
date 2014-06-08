@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.BooleanConst;
 import fatworm.constant.Const;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -13,7 +13,7 @@ public class BooleanType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.BOOLEAN_SIZE + Lib.INT_SIZE;
+        return TypeUtil.BOOLEAN_SIZE + TypeUtil.INT_SIZE;
     }
 
     @Override

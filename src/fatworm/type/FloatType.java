@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.FloatConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -13,7 +13,7 @@ public class FloatType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.FLOAT_SIZE + Lib.INT_SIZE;
+        return TypeUtil.FLOAT_SIZE + TypeUtil.INT_SIZE;
     }
 
     @Override

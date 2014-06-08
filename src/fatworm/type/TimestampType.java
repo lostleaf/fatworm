@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.TimestampConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -13,7 +13,7 @@ public class TimestampType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.TIMESTAMP_SIZE + Lib.TIMESTAMP_SIZE;
+        return TypeUtil.TIMESTAMP_SIZE + TypeUtil.TIMESTAMP_SIZE;
     }
 
     @Override

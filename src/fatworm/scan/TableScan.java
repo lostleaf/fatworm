@@ -99,30 +99,25 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public Scan getParent() {
-        return father;
-    }
-
-    @Override
-    public Const getColumn(Expression expr, boolean findFather) {
+    public Const getColumn(Expression expr, boolean findParent) {
         for (int i = 0; i < columnCount; ++i) {
             if (Compare.equalCol(getTableName(i), getFieldName(i), expr)) {
                 return nowRecord.get(i);
             }
         }
-        if (father == null || !findFather) return null;
-        return father.getColumn(expr, findFather);
+        if (father == null || !findParent) return null;
+        return father.getColumn(expr, findParent);
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findFather) {
+    public int getColumnType(Expression expr, boolean findParent) {
         for (int i = 0; i < columnCount; ++i) {
             if (Compare.equalCol(getTableName(i), getFieldName(i), expr)) {
                 return getColumnType(i);
             }
         }
-        if (father == null || !findFather) return notFound;
-        return father.getColumnType(expr, findFather);
+        if (father == null || !findParent) return notFound;
+        return father.getColumnType(expr, findParent);
     }
 
     @Override

@@ -2,7 +2,7 @@ package fatworm.type;
 
 import fatworm.constant.Const;
 import fatworm.constant.DecimalConst;
-import fatworm.util.Lib;
+import fatworm.util.TypeUtil;
 
 import java.sql.Types;
 
@@ -24,7 +24,7 @@ public class DecimalType implements Type {
 
     @Override
     public int getLength() {
-        return Lib.getDecimalSize(m);
+        return TypeUtil.getDecimalSize(m);
     }
 
     @Override

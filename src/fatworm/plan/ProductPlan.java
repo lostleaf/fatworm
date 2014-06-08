@@ -19,51 +19,25 @@ public class ProductPlan implements Plan {
 	public Scan open(Scan father) {
 		Scan s1 = p1.open(father);
 		Scan s2 = p2.open(father);
-		Scan s = new ProductScan(s1, s2, father);
-		return s;
+        return new ProductScan(s1, s2, father);
 	}
 	
 	public String toString() {
-		StringBuffer s = new StringBuffer("Product plan ( ");
-		s.append("plan a: ( "); s.append(p1.toString()); s.append("), ");
-		s.append("plan b: ( "); s.append(p2.toString()); s.append(") )");
-		return s.toString();
+        return "Product plan ( " + "plan a: ( " + p1.toString() + "), "
+                + "plan b: ( " + p2.toString() + ") )";
 	}
 	
 	@Override
 	public Plan getPlan() {
 		return null;
 	}
-	
-	public Plan getLeftPlan() {
-		return p1;
-	}
-	
-	public Plan getRightPlan() {
-		return p2;
-	}
-	
-	public void setLeftPlan(Plan p) {
-		this.p1 = p;
-	}
-	
-	public void setRightPlan(Plan p) {
-		this.p2 = p;
-	}
 
-	@Override
+    @Override
 	public void setPlan(Plan p) {
 		
 	}
 
-	@Override
-	public Plan down() {
-		p1 = p1.down();
-		p2 = p2.down();
-		return this;
-	}
-
-	@Override
+    @Override
 	public void renameTable(String from, String to) {
 		p1.renameTable(from, to);
 		p2.renameTable(from, to);
