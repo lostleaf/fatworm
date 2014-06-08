@@ -2,6 +2,9 @@ package fatworm.expr;
 
 import fatworm.parser.FatwormParser;
 
+/**
+ * Created by lostleaf on 14-6-5.
+ */
 public class Function {
 	
 	public static final int AVG     = 0;

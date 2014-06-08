@@ -16,6 +16,7 @@ public class Manager {
         file = new File(f, fileName);
         if (file.exists()) {
             try {
+//                System.out.println("lol");
                 FileInputStream ins = new FileInputStream(file);
                 ObjectInputStream ooi = new ObjectInputStream(ins);
                 dbManager = (DBManager)ooi.readObject();
@@ -24,16 +25,15 @@ public class Manager {
                 System.err.println("init error!");
                 e.printStackTrace();
             }
-        } else {
-            dbManager = new DBManager();
-        }
+        } else dbManager = new DBManager();
+//        System.out.println(dbManager);
     }
 
     public static void close() {
         try {
-            if (file.exists()) {
+            if (file.exists())
                 file.delete();
-            }
+
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(dbManager);
@@ -53,6 +53,6 @@ public class Manager {
     }
 
     public static DBManager getDBManager() {
-        return null;
+        return dbManager;
     }
 }

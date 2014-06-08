@@ -47,19 +47,7 @@ public class CmpOpPredicate implements Predicate {
         }
 
         int compare = l.compareTo(r);
-        if (compare > 0 && (cmpOp == CmpOp.GREATER_THAN || cmpOp == CmpOp.GREATER_EQ
-                || cmpOp == CmpOp.NOT_EQUAL))
-            return true;
-
-        if (compare == 0 && (cmpOp == CmpOp.GREATER_EQ || cmpOp == CmpOp.LESS_EQ
-                || cmpOp == CmpOp.EQUAL))
-            return true;
-
-        if (compare < 0 && (cmpOp == CmpOp.LESS_EQ || cmpOp == CmpOp.LESS_THAN
-                || cmpOp == CmpOp.NOT_EQUAL))
-            return true;
-
-        return false;
+        return CmpOp.doCompare(compare, cmpOp);
     }
 
     @Override

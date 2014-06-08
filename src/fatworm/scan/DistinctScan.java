@@ -1,96 +1,176 @@
 package fatworm.scan;
 
 import fatworm.constant.Const;
+import fatworm.expr.ColNameExpr;
 import fatworm.expr.Expression;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lostleaf on 14-6-5.
  */
 public class DistinctScan implements Scan {
-    public DistinctScan(Scan s, Scan father) {
-        super();
+
+    private Scan s;
+    private Set<Item> allItem = null;
+    private List<Item> itemList;
+    private Iterator<Item> iterator;
+    private Item nowItem;
+    private Scan parentScan;
+
+    private List<Const> nowRecord;
+    private Map<String, Integer> idxMap;
+
+    public DistinctScan(Scan s, Scan parentScan) {
+        this.s = s;
+        this.parentScan = parentScan;
+
+        idxMap = new HashMap<String, Integer>();
+        int columnCount = getColumnCount();
+        for (int i = 0; i < columnCount; ++i) {
+            String tbl = getTableName(i);
+            Expression fld = getFieldName(i);
+            if (fld instanceof ColNameExpr) {
+                Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+                idxMap.put(exp.toHashString(), i);
+                exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
+                idxMap.put(exp.toHashString(), i);
+            } else {
+                idxMap.put(fld.toHashString(), i);
+            }
+        }
     }
 
-    //TODO unimplemented
+    private class Item {
+        public List<Const> rec;
+
+        public Item(List<Const> rec) {
+            this.rec = rec;
+        }
+
+        public String toString() {
+            return rec.toString();
+        }
+
+        public int hashCode() {
+            return toString().hashCode();
+        }
+
+        public boolean equals(Object obj) {
+            return obj instanceof Item && toString().equals(obj.toString());
+        }
+
+    }
+
     @Override
     public void beforeFirst() {
-
+        iterator = itemList.iterator();
     }
 
     @Override
     public boolean next() {
-        return false;
+        if (allItem == null) {
+            itemList = new ArrayList<Item>();
+            allItem = new HashSet<Item>();
+            while (s.next()) {
+                ArrayList<Const> item = new ArrayList<Const>();
+                item.addAll(s.getNowRecord());
+                Item newItem = new Item(item);
+                if (allItem.contains(newItem)) continue;
+                allItem.add(newItem);
+                itemList.add(newItem);
+            }
+            iterator = itemList.iterator();
+        }
+        if (iterator.hasNext()) {
+            nowItem = iterator.next();
+            nowRecord = nowItem.rec;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public int getColumnCount() {
-        return 0;
+        return s.getColumnCount();
     }
 
     @Override
     public int getColumnType(int columnIndex) {
-        return 0;
-    }
-
-    @Override
-    public int getColumnType(Expression expr, boolean findFather) {
-        return 0;
-    }
-
-    @Override
-    public int getColumnIndex(Expression expr) {
-        return 0;
+        return s.getColumnType(columnIndex);
     }
 
     @Override
     public Const getColumn(int columnIndex) {
-        return null;
-    }
-
-    @Override
-    public Const getColumn(Expression expr, boolean findFather) {
-        return null;
+        return nowItem.rec.get(columnIndex);
     }
 
     @Override
     public void close() {
-
+        s.close();
     }
 
     @Override
     public Expression getFieldName(int columnIndex) {
-        return null;
+        return s.getFieldName(columnIndex);
     }
 
     @Override
     public String getTableName(int columnIndex) {
-        return null;
-    }
-
-    @Override
-    public int getOriginColNum() {
-        return 0;
+        return s.getTableName(columnIndex);
     }
 
     @Override
     public Scan getParent() {
-        return null;
+        return parentScan;
+    }
+
+    @Override
+    public Const getColumn(Expression expr, boolean findFather) {
+        Const c = s.getColumn(expr, findFather);
+        return c;
+//		if (c != null || (!(s instanceof TableScan))) return c;
+//		if (parentScan == null) return null;
+//		return parentScan.getColumn(expr);
+    }
+
+    @Override
+    public int getColumnType(Expression expr, boolean findFather) {
+        int t = s.getColumnType(expr, findFather);
+        return t;
+//		if (t != notFound || (!(s instanceof TableScan))) return t;
+//		if (parentScan == null) return notFound;
+//		return parentScan.getColumnType(expr);
+    }
+
+    @Override
+    public int getColumnIndex(Expression expr) {
+        return s.getColumnIndex(expr);
+    }
+
+    @Override
+    public int getOriginColNum() {
+        return s.getOriginColNum();
     }
 
     @Override
     public List<Const> getNowRecord() {
-        return null;
+        return nowRecord;
     }
 
     @Override
     public Const get(int columnIndex) {
-        return null;
+        return nowRecord.get(columnIndex);
     }
 
     @Override
     public Const get(Expression expr, boolean findFather) {
-        return null;
+        if (idxMap.containsKey(expr.toHashString())) {
+            return nowRecord.get(idxMap.get(expr.toHashString()));
+        }
+        if (!findFather || parentScan == null) return null;
+        return parentScan.get(expr, true);
     }
+
 }

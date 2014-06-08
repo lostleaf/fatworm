@@ -5,6 +5,9 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 
+/**
+ * Created by lostleaf on 14-6-5.
+ */
 public class Lib {
 
     public static int getStrSize(int len) {

@@ -14,12 +14,16 @@ public class FatStatement implements Statement {
     private boolean hasResultSet;
     private Plan plan;
     private Scan scan;
+
     @Override
     public ResultSet getResultSet() throws SQLException {
+//        System.out.println(hasResultSet);
         return hasResultSet ? new FatResultSet(scan) : null;
     }
+
     @Override
     public boolean execute(String sql) throws SQLException {
+//        System.out.println("fuck");
         Planner planner = Manager.createPlanner();
         planner.execute(sql);
         hasResultSet = planner.isQuery;
@@ -99,7 +103,6 @@ public class FatStatement implements Statement {
     public void setCursorName(String name) throws SQLException {
 
     }
-
 
 
     @Override

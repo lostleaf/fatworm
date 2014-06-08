@@ -22,6 +22,7 @@ public class FatResultSetMetaData implements ResultSetMetaData {
 
     @Override
     public int getColumnCount() throws SQLException {
+//        System.out.println(scan.getClass());
         return scan.getColumnCount();
     }
 

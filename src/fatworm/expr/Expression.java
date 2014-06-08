@@ -13,6 +13,7 @@ import java.util.HashSet;
 public interface Expression {
 
     public Const getResult(Scan s);
+
     public int getType(Scan s);
 
     public void renameTable(String from, String to);

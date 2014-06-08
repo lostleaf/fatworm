@@ -9,144 +9,147 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Created by lostleaf on 14-6-5.
+ */
 public class SelectScan implements UpdateScan {
-	
-	private Scan s, father;
-	private Predicate pred;
-	private List<Const> nowRecord;
-	private Map<String, Integer> idxMap;
 
-	public SelectScan(Scan s, Predicate pred, Scan father) {
-		this.s = s;
-		this.pred = pred;
-		this.father = father;
-		
-		idxMap = new HashMap<String, Integer>();
-		int columnCount = getColumnCount();
-		for (int i = 0; i < columnCount; ++i) {
-			String tbl = getTableName(i);
-			Expression fld = getFieldName(i);
-			if (fld instanceof ColNameExpr) {
-				Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
-				idxMap.put(exp.toHashString(), i);
-				exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
-				idxMap.put(exp.toHashString(), i);
-			} else {
-				idxMap.put(fld.toHashString(), i);
-			}
-		}
-	}
-	
-	@Override
-	public void beforeFirst() {
-		s.beforeFirst();
-	}
+    private Scan s, father;
+    private Predicate pred;
+    private List<Const> nowRecord;
+    private Map<String, Integer> idxMap;
 
-	@Override
-	public boolean next() {
-		while (s.next()) {
-			nowRecord = s.getNowRecord();
-			if (pred.isSatisfied(this)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public SelectScan(Scan s, Predicate pred, Scan father) {
+        this.s = s;
+        this.pred = pred;
+        this.father = father;
 
-	@Override
-	public int getColumnCount() {
-		return s.getColumnCount();
-	}
+        idxMap = new HashMap<String, Integer>();
+        int columnCount = getColumnCount();
+        for (int i = 0; i < columnCount; ++i) {
+            String tbl = getTableName(i);
+            Expression fld = getFieldName(i);
+            if (fld instanceof ColNameExpr) {
+                Expression exp = new ColNameExpr(tbl, ((ColNameExpr) fld).getFldName());
+                idxMap.put(exp.toHashString(), i);
+                exp = new ColNameExpr(null, ((ColNameExpr) fld).getFldName());
+                idxMap.put(exp.toHashString(), i);
+            } else {
+                idxMap.put(fld.toHashString(), i);
+            }
+        }
+    }
 
-	@Override
-	public int getColumnType(int columnIndex) {
-		return s.getColumnType(columnIndex);
-	}
+    @Override
+    public void beforeFirst() {
+        s.beforeFirst();
+    }
 
-	@Override
-	public Const getColumn(int columnIndex) {
-		return s.getColumn(columnIndex);
-	}
+    @Override
+    public boolean next() {
+        while (s.next()) {
+            nowRecord = s.getNowRecord();
+            if (pred.isSatisfied(this)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public void close() {
-		s.close();
-	}
+    @Override
+    public int getColumnCount() {
+        return s.getColumnCount();
+    }
 
-	@Override
-	public Expression getFieldName(int columnIndex) {
-		return s.getFieldName(columnIndex);
-	}
+    @Override
+    public int getColumnType(int columnIndex) {
+        return s.getColumnType(columnIndex);
+    }
 
-	@Override
-	public String getTableName(int columnIndex) {
-		return s.getTableName(columnIndex);
-	}
+    @Override
+    public Const getColumn(int columnIndex) {
+        return s.getColumn(columnIndex);
+    }
 
-	@Override
-	public Scan getParent() {
-		return father;
-	}
+    @Override
+    public void close() {
+        s.close();
+    }
 
-	@Override
-	public Const getColumn(Expression expr, boolean findFather) {
-		Const c = s.getColumn(expr, findFather);
-		return c;
-	}
+    @Override
+    public Expression getFieldName(int columnIndex) {
+        return s.getFieldName(columnIndex);
+    }
 
-	@Override
-	public int getColumnType(Expression expr, boolean findFather) {
-		int t = s.getColumnType(expr, findFather);
-		return t;
-	}
+    @Override
+    public String getTableName(int columnIndex) {
+        return s.getTableName(columnIndex);
+    }
 
-	@Override
-	public int getColumnIndex(Expression expr) {
-		return s.getColumnIndex(expr);
-	}
-	
-	@Override
-	public int getOriginColNum() {
-		return s.getOriginColNum();
-	}
+    @Override
+    public Scan getParent() {
+        return father;
+    }
 
-	@Override
-	public void setValue(Expression expr, Const val) {
-		((TableScan)s).setValue(expr, val);
-	}
+    @Override
+    public Const getColumn(Expression expr, boolean findFather) {
+        Const c = s.getColumn(expr, findFather);
+        return c;
+    }
 
-	@Override
-	public void setValue(int idx, Const val) {
-		((TableScan)s).setValue(idx, val);
-	}
+    @Override
+    public int getColumnType(Expression expr, boolean findFather) {
+        int t = s.getColumnType(expr, findFather);
+        return t;
+    }
 
-	@Override
-	public void insert(List<Const> values) {
-		((TableScan)s).insert(values);
-	}
+    @Override
+    public int getColumnIndex(Expression expr) {
+        return s.getColumnIndex(expr);
+    }
 
-	@Override
-	public void delete() {
-		((TableScan)s).delete();
-	}
+    @Override
+    public int getOriginColNum() {
+        return s.getOriginColNum();
+    }
 
-	@Override
-	public List<Const> getNowRecord() {
-		return nowRecord;
-	}
+    @Override
+    public void setValue(Expression expr, Const val) {
+        ((TableScan) s).setValue(expr, val);
+    }
 
-	@Override
-	public Const get(int columnIndex) {
-		return nowRecord.get(columnIndex);
-	}
+    @Override
+    public void setValue(int idx, Const val) {
+        ((TableScan) s).setValue(idx, val);
+    }
 
-	@Override
-	public Const get(Expression expr, boolean findFather) {
-		if (idxMap.containsKey(expr.toHashString())) {
-			return nowRecord.get(idxMap.get(expr.toHashString()));
-		}
-		if (!findFather || father == null) return null;
-		return father.get(expr, findFather);
-	}
+    @Override
+    public void insert(List<Const> values) {
+        ((TableScan) s).insert(values);
+    }
+
+    @Override
+    public void delete() {
+        ((TableScan) s).delete();
+    }
+
+    @Override
+    public List<Const> getNowRecord() {
+        return nowRecord;
+    }
+
+    @Override
+    public Const get(int columnIndex) {
+        return nowRecord.get(columnIndex);
+    }
+
+    @Override
+    public Const get(Expression expr, boolean findFather) {
+        if (idxMap.containsKey(expr.toHashString())) {
+            return nowRecord.get(idxMap.get(expr.toHashString()));
+        }
+        if (!findFather || father == null) return null;
+        return father.get(expr, findFather);
+    }
 
 }

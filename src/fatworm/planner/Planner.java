@@ -53,8 +53,10 @@ public class Planner {
 
     public void execute(CommonTree t, List<FuncExpr> funcs, Plan plan) {
         isQuery = t.getType() == FatwormParser.SELECT || t.getType() == FatwormParser.SELECT_DISTINCT;
-        if (isQuery)
+        if (isQuery) {
             queryPlan = queryPlanner.getPlan(t, funcs, plan);
+//            System.out.println(queryPlan);
+        }
         else
             updatePlanner.executeUpdate(t, plan);
     }

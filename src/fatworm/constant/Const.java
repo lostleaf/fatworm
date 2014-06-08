@@ -2,6 +2,9 @@ package fatworm.constant;
 
 import java.io.Serializable;
 
+/**
+ * Created by lostleaf on 14-6-5.
+ */
 public interface Const extends Serializable {
 	
 	public Object getObj();

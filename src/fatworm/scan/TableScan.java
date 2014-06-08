@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Compare;
+import fatworm.util.Compare;
 import fatworm.expr.Expression;
 import fatworm.handler.Manager;
 import fatworm.memory.MemoryRecordFile;

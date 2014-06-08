@@ -22,7 +22,7 @@ public class FatResultSet implements ResultSet {
 
     @Override
     public ResultSetMetaData getMetaData() throws SQLException {
-        return null;
+        return new FatResultSetMetaData(scan);
     }
 
     @Override

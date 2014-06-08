@@ -1,11 +1,11 @@
 package fatworm.planner;
 
+import fatworm.constant.BooleanConst;
 import fatworm.constant.DecimalConst;
 import fatworm.constant.IntegerConst;
-import fatworm.expr.ColNameExpr;
-import fatworm.expr.ConstExpr;
-import fatworm.expr.Expression;
-import fatworm.expr.FuncExpr;
+import fatworm.constant.StringConst;
+import fatworm.expr.*;
+import fatworm.handler.Manager;
 import fatworm.parser.FatwormParser;
 import fatworm.plan.Plan;
 import org.antlr.runtime.tree.CommonTree;
@@ -16,12 +16,67 @@ import java.util.List;
  * Created by lostleaf on 14-6-5.
  */
 public class ExprPlanner {
-    public static Expression getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan parentPlan) {
-        if (tree.getType() == FatwormParser.INTEGER_LITERAL)
-            if (tree.getText().length() < 10)
-                return new ConstExpr(new IntegerConst(tree.getText()));
-            else
+    public static Expression getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan fatherPlan) {
+        switch (tree.getType()) {
+            case FatwormParser.T__105: // %
+            case FatwormParser.T__108: // *
+            case FatwormParser.T__109: // +
+            case FatwormParser.T__111: // -
+            case FatwormParser.T__113: // /
+                if (tree.getChildCount() == 2) {
+                    int op = Operator.getOpFromType(tree.getType());
+                    Expression left = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                    Expression right = getExpression((CommonTree)tree.getChild(1), upFuncs, fatherPlan);
+                    return new BinaryExpr(left, right, op);
+                } else if (tree.getChildCount() == 1) {
+                    int op = Operator.getOpFromType(tree.getType());
+                    Expression left = new ConstExpr(new IntegerConst(0));
+                    Expression right = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                    Expression newExpr = new BinaryExpr(left, right, op);
+                    if (right instanceof ConstExpr) {
+                        return new ConstExpr(newExpr.getResult(null));
+                    }
+                    return newExpr;
+                } else {
+                    return new ColNameExpr(null, "*");
+                }
+            case FatwormParser.T__112: // .
+                return new ColNameExpr(tree.getChild(0).getText(), tree.getChild(1).getText());
+            case FatwormParser.INTEGER_LITERAL:
+                if (tree.getText().length() < 10)
+                    return new ConstExpr(new IntegerConst(tree.getText()));
+                else
+                    return new ConstExpr(new DecimalConst(tree.getText()));
+            case FatwormParser.STRING_LITERAL:
+                return new ConstExpr(new StringConst(tree.getText()));
+            case FatwormParser.FLOAT_LITERAL:
                 return new ConstExpr(new DecimalConst(tree.getText()));
-        return new ColNameExpr(null, tree.getText());
+            case FatwormParser.TRUE:
+                return new ConstExpr(new BooleanConst(true));
+            case FatwormParser.FALSE:
+                return new ConstExpr(new BooleanConst(false));
+            case FatwormParser.NULL:
+                return new ConstExpr(null);
+            case FatwormParser.DEFAULT:
+                return new DefaultExpr();
+            case FatwormParser.SELECT:
+            case FatwormParser.SELECT_DISTINCT:
+                Planner planner = Manager.createPlanner();
+                planner.execute(tree, upFuncs, fatherPlan);
+                Plan p = planner.getQueryPlan();
+                return new QueryExpr(p);
+            case FatwormParser.AVG:
+            case FatwormParser.COUNT:
+            case FatwormParser.MIN:
+            case FatwormParser.MAX:
+            case FatwormParser.SUM:
+                int func = Function.getFuncFromType(tree.getType());
+                Expression colName = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                FuncExpr funcExpr = new FuncExpr((ColNameExpr)colName, func);
+                upFuncs.add(funcExpr);
+                return funcExpr;
+            default:
+                return new ColNameExpr(null, tree.getText());
+        }
     }
 }

@@ -6,6 +6,9 @@ import fatworm.util.Lib;
 
 import java.sql.Types;
 
+/**
+ * Created by lostleaf on 14-6-5.
+ */
 public class VarcharType implements Type {
 
     private int length;
