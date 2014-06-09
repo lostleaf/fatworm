@@ -3,8 +3,6 @@ package fatworm.pred;
 import fatworm.plan.Plan;
 import fatworm.scan.Scan;
 
-import java.util.HashSet;
-
 /**
  * Created by lostleaf on 14-6-7.
  */
@@ -28,27 +26,12 @@ public class ExistsPredicate implements Predicate {
     }
 
     public String toString() {
-        StringBuffer s = new StringBuffer("Predicate exists: ( ");
-        s.append("plan: ( ");
-        s.append(p.toString());
-        s.append(" ) )");
-        return s.toString();
+        return "Predicate exists: ( " + "plan: ( " + p.toString() + " ) )";
     }
 
     @Override
     public void renameTable(String from, String to) {
         p.renameTable(from, to);
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        return new HashSet<String>();
-//		return p.getAllUsedTblNames();
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames(Plan p) {
-        return p.getAllUsedTblNames();
     }
 
 }

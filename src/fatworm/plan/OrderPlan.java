@@ -57,21 +57,6 @@ public class OrderPlan implements Plan {
     }
 
     @Override
-    public String getTblName(String fldName, boolean findFather) {
-        return p.getTblName(fldName, findFather);
-//		if (tblName != null) return tblName;
-//		if (father == null || (!(p instanceof TablePlan))) return null;
-//		return father.getTblName(fldName);
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames() {
-        HashSet<String> s = p.getAllUsedTblNames();
-        s.addAll(colName.getTblNames(this));
-        return s;
-    }
-
-    @Override
     public Plan getParentPlan() {
         return father;
     }

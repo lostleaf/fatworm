@@ -1,21 +1,19 @@
 package fatworm.expr;
 
 import fatworm.constant.*;
-import fatworm.plan.Plan;
 import fatworm.scan.Scan;
 
 import java.sql.Types;
-import java.util.HashSet;
 
 /**
  * Created by lostleaf on 14-6-7.
  */
-public class BinaryExpr implements Expression {
+public class BinaryExpr implements Expr {
 
-    private Expression a, b;
+    private Expr a, b;
     private int op;
 
-    public BinaryExpr(Expression a, Expression b, int op) {
+    public BinaryExpr(Expr a, Expr b, int op) {
         this.a = a;
         this.b = b;
         this.op = op;
@@ -72,14 +70,6 @@ public class BinaryExpr implements Expression {
     public void renameTable(String from, String to) {
         a.renameTable(from, to);
         b.renameTable(from, to);
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        HashSet<String> sleft = a.getTblNames(p);
-        HashSet<String> sright = b.getTblNames(p);
-        sleft.addAll(sright);
-        return sleft;
     }
 
     @Override

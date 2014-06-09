@@ -52,18 +52,6 @@ public class SelectPlan implements Plan {
     }
 
     @Override
-    public HashSet<String> getAllUsedTblNames() {
-        HashSet<String> s = plan.getAllUsedTblNames();
-        s.addAll(pred.getAllUsedTblNames(this));
-        return s;
-    }
-
-    @Override
-    public String getTblName(String fldName, boolean findFather) {
-        return plan.getTblName(fldName, findFather);
-    }
-
-    @Override
     public Plan getParentPlan() {
         return parentPlan;
     }

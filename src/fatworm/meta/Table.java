@@ -14,11 +14,6 @@ public class Table implements Serializable {
         this.schema = schema;
     }
 
-    //TODO unimplemented
-    public void createIndex(String primary, String indexName) {
-    }
-
-
     public Schema getSchema() {
         return schema;
     }

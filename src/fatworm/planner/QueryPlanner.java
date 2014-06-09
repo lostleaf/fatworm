@@ -2,7 +2,7 @@ package fatworm.planner;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.handler.Manager;
 import fatworm.meta.Schema;
@@ -146,7 +146,7 @@ public class QueryPlanner {
     }
 
     private void dealEmptyTableNull(Plan parentPlan) {
-        Schema sch = new Schema(EmptyTableName);
+        Schema sch = new Schema();
         Manager.getDBManager().getCurrentDB().addTable(EmptyTableName, sch);
         TablePlan tp = new TablePlan(EmptyTableName, parentPlan);
         TableScan ts = (TableScan) tp.open(null);
@@ -177,7 +177,7 @@ public class QueryPlanner {
     protected Plan getRenamePlan(CommonTree tree, Plan p, Plan insertGroup, Plan insertHaving,
                                  Map<CommonTree, String> renaming, List<FuncExpr> upFuncs, Plan parentPlan) {
         if (tree.getType() == FatwormParser.AS) {
-            Expression from = ExprPlanner.getExpression((CommonTree)tree.getChild(0), upFuncs, p);
+            Expr from = ExprPlanner.getExpression((CommonTree)tree.getChild(0), upFuncs, p);
             String to = tree.getChild(1).getText();
             if (from instanceof ColNameExpr && insertGroup != null) {
                 Plan subP = insertGroup.getPlan();
@@ -194,7 +194,7 @@ public class QueryPlanner {
             }
 
         }
-        Expression expr = ExprPlanner.getExpression(tree, upFuncs, p);
+        Expr expr = ExprPlanner.getExpression(tree, upFuncs, p);
         if (expr instanceof ColNameExpr) {
             return p;
         }

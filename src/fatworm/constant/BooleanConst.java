@@ -27,8 +27,7 @@ public class BooleanConst implements Const {
 
     @Override
     public boolean equals(Const c) {
-        if (!(c instanceof BooleanConst)) return false;
-        return obj.equals(c.getObj());
+        return c instanceof BooleanConst && obj.equals(c.getObj());
     }
 
     @Override
@@ -91,8 +90,7 @@ public class BooleanConst implements Const {
 
     @Override
     public DecimalConst toDecimalConst() {
-        if (obj) return new DecimalConst("1");
-        else return new DecimalConst("0");
+        return obj ? new DecimalConst("1") : new DecimalConst("0");
     }
 
     @Override
@@ -107,8 +105,7 @@ public class BooleanConst implements Const {
 
     @Override
     public FloatConst toFloatConst() {
-        if (obj) return new FloatConst(1);
-        else return new FloatConst(0);
+        return obj ? new FloatConst(1) : new FloatConst(0);
     }
 
 }

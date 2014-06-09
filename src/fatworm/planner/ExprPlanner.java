@@ -16,7 +16,7 @@ import java.util.List;
  * Created by lostleaf on 14-6-5.
  */
 public class ExprPlanner {
-    public static Expression getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan fatherPlan) {
+    public static Expr getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan fatherPlan) {
         switch (tree.getType()) {
             case FatwormParser.T__105: // %
             case FatwormParser.T__108: // *
@@ -25,14 +25,14 @@ public class ExprPlanner {
             case FatwormParser.T__113: // /
                 if (tree.getChildCount() == 2) {
                     int op = Operator.getOpFromType(tree.getType());
-                    Expression left = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
-                    Expression right = getExpression((CommonTree)tree.getChild(1), upFuncs, fatherPlan);
+                    Expr left = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                    Expr right = getExpression((CommonTree)tree.getChild(1), upFuncs, fatherPlan);
                     return new BinaryExpr(left, right, op);
                 } else if (tree.getChildCount() == 1) {
                     int op = Operator.getOpFromType(tree.getType());
-                    Expression left = new ConstExpr(new IntegerConst(0));
-                    Expression right = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
-                    Expression newExpr = new BinaryExpr(left, right, op);
+                    Expr left = new ConstExpr(new IntegerConst(0));
+                    Expr right = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                    Expr newExpr = new BinaryExpr(left, right, op);
                     if (right instanceof ConstExpr) {
                         return new ConstExpr(newExpr.getResult(null));
                     }
@@ -71,7 +71,7 @@ public class ExprPlanner {
             case FatwormParser.MAX:
             case FatwormParser.SUM:
                 int func = Function.getFuncFromType(tree.getType());
-                Expression colName = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                Expr colName = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
                 FuncExpr funcExpr = new FuncExpr((ColNameExpr)colName, func);
                 upFuncs.add(funcExpr);
                 return funcExpr;

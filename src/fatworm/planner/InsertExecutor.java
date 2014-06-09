@@ -1,7 +1,7 @@
 package fatworm.planner;
 
 import fatworm.constant.Const;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.handler.Manager;
 import fatworm.meta.Attribute;
@@ -58,7 +58,7 @@ public class InsertExecutor {
                 getSchema().getAttributes();
         Map<Integer, Const> vals = new HashMap<Integer, Const>();
         for (int i = 0; i < colNum; ++i) {
-            Expression colNameExpr = ExprPlanner.getExpression((CommonTree) tree.getChild(i + 1),
+            Expr colNameExpr = ExprPlanner.getExpression((CommonTree) tree.getChild(i + 1),
                     upFuncs, p);
             int index = s.getColumnIndex(colNameExpr);
             if (values.getChild(i).getText().toLowerCase().equals("default")

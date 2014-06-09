@@ -25,10 +25,6 @@ public class DBManager implements Serializable {
         return currentDB;
     }
 
-    public String getCurrentDBName() {
-        return currentDBName;
-    }
-
     public void useDatabase(String dbName) {
         dbName = dbName.toLowerCase();
         currentDBName = dbName;

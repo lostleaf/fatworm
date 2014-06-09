@@ -12,11 +12,9 @@ public class Schema implements Serializable {
 
     private List<Attribute> attrs;
     private Map<String, Integer> idx;
-    private String primary;
 
-    public Schema(String tblName) {
+    public Schema() {
         attrs = new ArrayList<Attribute>();
-        primary = null;
         idx = new HashMap<String, Integer>();
     }
 
@@ -36,14 +34,6 @@ public class Schema implements Serializable {
     public void addAttribute(Attribute a) {
         idx.put(a.getAttrName(), attrs.size());
         attrs.add(a);
-    }
-
-    public void setPrimary(String attrName) {
-        primary = attrName.toLowerCase();
-    }
-
-    public String getPrimary() {
-        return primary;
     }
 
 }

@@ -57,18 +57,6 @@ public class RenamePlan implements Plan {
     }
 
     @Override
-    public String getTblName(String fldName, boolean findFather) {
-        return p.getTblName(fldName, findFather);
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames() {
-        HashSet<String> s = p.getAllTblNames();
-        s.add(newName);
-        return s;
-    }
-
-    @Override
     public Plan getParentPlan() {
         return father;
     }

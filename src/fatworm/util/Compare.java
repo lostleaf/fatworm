@@ -1,7 +1,7 @@
 package fatworm.util;
 
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 
 /**
@@ -9,7 +9,7 @@ import fatworm.expr.FuncExpr;
  */
 public class Compare {
 
-    public static boolean equalCol(String tblName, Expression fldName, Expression colName) {
+    public static boolean equalCol(String tblName, Expr fldName, Expr colName) {
         return colName instanceof ColNameExpr ?
                 ((ColNameExpr) colName).getTblName() == null ?
                     fldName instanceof ColNameExpr &&

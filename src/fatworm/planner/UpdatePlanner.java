@@ -2,7 +2,7 @@ package fatworm.planner;
 
 import fatworm.constant.Const;
 import fatworm.constant.NullConst;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.handler.Manager;
 import fatworm.meta.Attribute;
@@ -68,7 +68,7 @@ public class UpdatePlanner {
     private void createTable(CommonTree tree) {
         int childNum = tree.getChildCount();
         String tblName = tree.getChild(0).getText();
-        Schema schema = new Schema(tblName);
+        Schema schema = new Schema();
         String primary_key = null;
         for (int i = 1; i < childNum; ++i) {
             CommonTree def = (CommonTree) tree.getChild(i);
@@ -129,11 +129,11 @@ public class UpdatePlanner {
                         break;
                 }
             }
-            Attribute attr = new Attribute(tblName, attrName, type, defaultValue,
-                    mustNull, mustNotNull, autoIncre);
+            Attribute attr = new Attribute(attrName, type, defaultValue,
+                    autoIncre);
             schema.addAttribute(attr);
         }
-        if (primary_key != null) schema.setPrimary(primary_key);
+//        if (primary_key != null) schema.setPrimary(primary_key);
         Manager.getDBManager().getCurrentDB().addTable(tblName, schema);
     }
 
@@ -182,9 +182,9 @@ public class UpdatePlanner {
             for (int i = 1; i < totalChild; ++i) {
                 CommonTree updatePair = (CommonTree) tree.getChild(i);
 //                System.err.println(updatePair.toStringTree());
-                Expression colName = ExprPlanner.getExpression(
+                Expr colName = ExprPlanner.getExpression(
                         (CommonTree) updatePair.getChild(0), upFuncs, p);
-                Expression expr = ExprPlanner.getExpression(
+                Expr expr = ExprPlanner.getExpression(
                         (CommonTree) updatePair.getChild(1), upFuncs, p);
 //                System.out.println(expr);
                 Const c = expr.getResult(s);
@@ -196,10 +196,4 @@ public class UpdatePlanner {
     }
 
     private static List<FuncExpr> upFuncs = new ArrayList<FuncExpr>();
-    private static int cnt = 0;
-
-    private static String getNewTableName() {
-        return "temporary_table_" + String.valueOf(cnt++);
-    }
-
 }

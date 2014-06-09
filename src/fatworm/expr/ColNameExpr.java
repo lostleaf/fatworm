@@ -1,15 +1,12 @@
 package fatworm.expr;
 
 import fatworm.constant.Const;
-import fatworm.plan.Plan;
 import fatworm.scan.Scan;
-
-import java.util.HashSet;
 
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class ColNameExpr implements Expression {
+public class ColNameExpr implements Expr {
 
     private String tblName, fldName;
 
@@ -37,20 +34,13 @@ public class ColNameExpr implements Expression {
     }
 
     public String toString() {
-        return "ColName ( " + "tblName: " + tblName + ", " + "fldName: " + fldName + " )";
+        return "ColName ( " + "tblName: " + tblName +
+                ", " + "fldName: " + fldName + " )";
     }
 
     @Override
     public void renameTable(String from, String to) {
         if (from.equals(tblName)) tblName = to;
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        HashSet<String> s = new HashSet<String>();
-        if (tblName != null) s.add(tblName);
-        else s.add(p.getTblName(fldName, true));
-        return s;
     }
 
     @Override

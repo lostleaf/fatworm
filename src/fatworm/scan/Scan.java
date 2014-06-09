@@ -1,7 +1,7 @@
 package fatworm.scan;
 
 import fatworm.constant.Const;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 
 import java.util.List;
 
@@ -13,20 +13,20 @@ public interface Scan {
     public boolean next();
     public int getColumnCount();
     public int getColumnType(int columnIndex);
-    public int getColumnType(Expression expr, boolean findParent);
-    public int getColumnIndex(Expression expr);
+    public int getColumnType(Expr expr, boolean findParent);
+    public int getColumnIndex(Expr expr);
 
     public Const getColumn(int columnIndex);
-    public Const getColumn(Expression expr, boolean findParent);
+    public Const getColumn(Expr expr, boolean findParent);
     public void close();
-    public Expression getFieldName(int columnIndex);
+    public Expr getFieldName(int columnIndex);
     public String getTableName(int columnIndex);
 
     public int getOriginColNum();
 
     public List<Const> getNowRecord();
     public Const get(int columnIndex);
-    public Const get(Expression expr, boolean findFather);
+    public Const get(Expr expr, boolean findFather);
 
     static final int notFound = 1249327;
 }

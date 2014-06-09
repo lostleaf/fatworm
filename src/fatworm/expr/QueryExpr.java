@@ -4,12 +4,10 @@ import fatworm.constant.Const;
 import fatworm.plan.Plan;
 import fatworm.scan.Scan;
 
-import java.util.HashSet;
-
 /**
  * Created by lostleaf on 14-6-7.
  */
-public class QueryExpr implements Expression {
+public class QueryExpr implements Expr {
 	
 	private Plan p;
 	
@@ -41,13 +39,6 @@ public class QueryExpr implements Expression {
 	@Override
 	public void renameTable(String from, String to) {
 		p.renameTable(from, to);
-	}
-
-	@Override
-	public HashSet<String> getTblNames(Plan plan) {
-//		not sure
-		return p.getAllUsedTblNames();
-//		return new HashSet<String>();
 	}
 
 	@Override

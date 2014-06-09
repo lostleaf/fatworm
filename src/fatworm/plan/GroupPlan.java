@@ -70,22 +70,6 @@ public class GroupPlan implements Plan {
     }
 
     @Override
-    public String getTblName(String fldName, boolean findFather) {
-        return p.getTblName(fldName, findFather);
-//		if (tblName != null) return tblName;
-//		if (parentPlan == null || (!(p instanceof TablePlan))) return null;
-//		return parentPlan.getTblName(fldName);
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames() {
-        HashSet<String> s = p.getAllUsedTblNames();
-        if (colName != null) s.addAll(colName.getTblNames(this));
-        for (FuncExpr fe : funcs) s.addAll(fe.getTblNames(this));
-        return s;
-    }
-
-    @Override
     public Plan getParentPlan() {
         return parentPlan;
     }

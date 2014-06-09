@@ -5,7 +5,7 @@ import fatworm.constant.DoubleConst;
 import fatworm.constant.IntegerConst;
 import fatworm.constant.NullConst;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.expr.Function;
 import fatworm.util.Compare;
@@ -45,9 +45,9 @@ public class GroupScan implements Scan {
         int columnCount = getColumnCount();
         for (int i = 0; i < columnCount; ++i) {
             String tbl = getTableName(i);
-            Expression fld = getFieldName(i);
+            Expr fld = getFieldName(i);
             if (fld instanceof ColNameExpr) {
-                Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+                Expr exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
                 exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
@@ -112,7 +112,7 @@ public class GroupScan implements Scan {
             ArrayList<Integer> resultTypes = new ArrayList<Integer>();
             funcResults = new ArrayList<List<Const>>();
             for (Iterator<FuncExpr> iter = funcs.iterator(); iter.hasNext(); ) {
-                Expression e = iter.next();
+                Expr e = iter.next();
                 int type = ((FuncExpr)e).getFunc();
                 ColNameExpr col = ((FuncExpr)e).getColName();
                 int idx = getColumnIndex(col);
@@ -251,7 +251,7 @@ public class GroupScan implements Scan {
     }
 
     @Override
-    public Expression getFieldName(int columnIndex) {
+    public Expr getFieldName(int columnIndex) {
         int colCount = s.getColumnCount();
         if (columnIndex < colCount) return s.getFieldName(columnIndex);
         return funcs.get(columnIndex - colCount);
@@ -265,7 +265,7 @@ public class GroupScan implements Scan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findParent) {
+    public Const getColumn(Expr expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return getColumn(idx);
         if (father == null || !findParent) return null;
@@ -275,7 +275,7 @@ public class GroupScan implements Scan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findParent) {
+    public int getColumnType(Expr expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return getColumnType(idx);
         if (father == null || !findParent) return notFound;
@@ -286,7 +286,7 @@ public class GroupScan implements Scan {
     }
 
     @Override
-    public int getColumnIndex(Expression expr) {
+    public int getColumnIndex(Expr expr) {
         int idx = s.getColumnIndex(expr);
         if (idx != notFound) return idx;
         for (int i = 0; i < numFuncs; ++i) {
@@ -313,7 +313,7 @@ public class GroupScan implements Scan {
     }
 
     @Override
-    public Const get(Expression expr, boolean findFather) {
+    public Const get(Expr expr, boolean findFather) {
         if (idxMap.containsKey(expr.toHashString())) {
             return nowRecord.get(idxMap.get(expr.toHashString()));
         }

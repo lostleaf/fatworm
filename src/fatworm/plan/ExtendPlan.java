@@ -1,6 +1,6 @@
 package fatworm.plan;
 
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.scan.ExtendScan;
 import fatworm.scan.Scan;
 
@@ -10,10 +10,10 @@ public class ExtendPlan implements Plan {
 	
 	private Plan p;
 	private String newName;
-	private Expression expr;
+	private Expr expr;
 	private Plan father;
 	
-	public ExtendPlan(Plan p, Expression expr, String newName, Plan father) {
+	public ExtendPlan(Plan p, Expr expr, String newName, Plan father) {
 		this.p = p;
 		this.expr = expr;
 		if (newName != null) {
@@ -24,15 +24,11 @@ public class ExtendPlan implements Plan {
 		this.father = father;
 	}
 	
-	public Expression getExpr() {
+	public Expr getExpr() {
 		return expr;
 	}
-	
-	public String getNewName() {
-		return newName;
-	}
 
-	@Override
+    @Override
 	public Scan open(Scan father) {
 		Scan s = p.open(father);
 		s = new ExtendScan(s, expr, newName, father);
@@ -63,22 +59,6 @@ public class ExtendPlan implements Plan {
 	@Override
 	public HashSet<String> getAllTblNames() {
 		return p.getAllTblNames();
-	}
-
-	@Override
-	public String getTblName(String fldName, boolean findFather) {
-		if (newName.equals(fldName)) return "new_name";
-        return p.getTblName(fldName, findFather);
-//		if (tblName != null) return tblName;
-//		if (father == null || (!(p instanceof TablePlan))) return null;
-//		return father.getTblName(fldName);
-	}
-
-	@Override
-	public HashSet<String> getAllUsedTblNames() {
-		HashSet<String> s = p.getAllUsedTblNames();
-		s.addAll(expr.getTblNames(this));
-		return s;
 	}
 
 	@Override

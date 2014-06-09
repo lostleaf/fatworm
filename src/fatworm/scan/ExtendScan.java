@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.util.Compare;
 
 import java.util.ArrayList;
@@ -13,14 +13,14 @@ import java.util.Map;
 public class ExtendScan implements Scan {
 	
 	private Scan s;
-	private Expression expr;
+	private Expr expr;
 	private String newName;
 	private Scan father;
 	
 	private ArrayList<Const> nowRecord;
 	private Map<String, Integer> idxMap;
 	
-	public ExtendScan(Scan s, Expression expr, String newName, Scan father) {
+	public ExtendScan(Scan s, Expr expr, String newName, Scan father) {
 		this.s = s;
 		this.expr = expr;
 		this.newName = newName;
@@ -30,9 +30,9 @@ public class ExtendScan implements Scan {
 		int columnCount = getColumnCount();
 		for (int i = 0; i < columnCount; ++i) {
 			String tbl = getTableName(i);
-			Expression fld = getFieldName(i);
+			Expr fld = getFieldName(i);
 			if (fld instanceof ColNameExpr) {
-				Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+				Expr exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
 				idxMap.put(exp.toHashString(), i);
 				exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
 				idxMap.put(exp.toHashString(), i);
@@ -81,7 +81,7 @@ public class ExtendScan implements Scan {
 	}
 
 	@Override
-	public Expression getFieldName(int columnIndex) {
+	public Expr getFieldName(int columnIndex) {
 		if (columnIndex < s.getColumnCount()) return s.getFieldName(columnIndex);
 		return new ColNameExpr(null, newName);
 	}
@@ -93,7 +93,7 @@ public class ExtendScan implements Scan {
 	}
 
     @Override
-	public Const getColumn(Expression exp, boolean findParent) {
+	public Const getColumn(Expr exp, boolean findParent) {
 		int colCount = getColumnCount();
 		if (Compare.equalCol(getTableName(colCount - 1), getFieldName(colCount - 1), exp)) {
 			return expr.getResult(s);
@@ -106,7 +106,7 @@ public class ExtendScan implements Scan {
 	}
 
 	@Override
-	public int getColumnType(Expression exp, boolean findParent) {
+	public int getColumnType(Expr exp, boolean findParent) {
 		int colCount = getColumnCount();
 		if (Compare.equalCol(getTableName(colCount - 1), getFieldName(colCount - 1), exp)) {
 			return expr.getType(s);
@@ -119,7 +119,7 @@ public class ExtendScan implements Scan {
 	}
 
 	@Override
-	public int getColumnIndex(Expression exp) {
+	public int getColumnIndex(Expr exp) {
 		int colCount = getColumnCount();
 		if (Compare.equalCol(getTableName(colCount - 1), getFieldName(colCount - 1), exp)) {
 			return colCount - 1;
@@ -143,7 +143,7 @@ public class ExtendScan implements Scan {
 	}
 
 	@Override
-	public Const get(Expression expr, boolean findFather) {
+	public Const get(Expr expr, boolean findFather) {
 		if (idxMap.containsKey(expr.toHashString())) {
 			return nowRecord.get(idxMap.get(expr.toHashString()));
 		}

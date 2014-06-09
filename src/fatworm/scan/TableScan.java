@@ -2,8 +2,8 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
+import fatworm.expr.Expr;
 import fatworm.util.Compare;
-import fatworm.expr.Expression;
 import fatworm.handler.Manager;
 import fatworm.memory.MemoryRecordFile;
 import fatworm.meta.Attribute;
@@ -42,8 +42,8 @@ public class TableScan implements UpdateScan {
         idxMap = new HashMap<String, Integer>();
         for (int i = 0; i < columnCount; ++i) {
             String tbl = getTableName(i);
-            Expression fld = getFieldName(i);
-            Expression exp = new ColNameExpr(tbl, ((ColNameExpr) fld).getFldName());
+            Expr fld = getFieldName(i);
+            Expr exp = new ColNameExpr(tbl, ((ColNameExpr) fld).getFldName());
             idxMap.put(exp.toHashString(), i);
             exp = new ColNameExpr(null, ((ColNameExpr) fld).getFldName());
             idxMap.put(exp.toHashString(), i);
@@ -89,7 +89,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public Expression getFieldName(int columnIndex) {
+    public ColNameExpr getFieldName(int columnIndex) {
         return new ColNameExpr(null, attrs.get(columnIndex).getAttrName());
     }
 
@@ -99,7 +99,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findParent) {
+    public Const getColumn(Expr expr, boolean findParent) {
         for (int i = 0; i < columnCount; ++i) {
             if (Compare.equalCol(getTableName(i), getFieldName(i), expr)) {
                 return nowRecord.get(i);
@@ -110,7 +110,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findParent) {
+    public int getColumnType(Expr expr, boolean findParent) {
         for (int i = 0; i < columnCount; ++i) {
             if (Compare.equalCol(getTableName(i), getFieldName(i), expr)) {
                 return getColumnType(i);
@@ -121,7 +121,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public int getColumnIndex(Expression expr) {
+    public int getColumnIndex(Expr expr) {
         for (int i = 0; i < columnCount; ++i) {
             if (Compare.equalCol(getTableName(i), getFieldName(i), expr)) {
                 return i;
@@ -136,7 +136,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public void setValue(Expression expr, Const val) {
+    public void setValue(Expr expr, Const val) {
         int idx = schema.getIdx(((ColNameExpr) expr).getFldName());
         setValue(idx, val);
     }
@@ -172,7 +172,7 @@ public class TableScan implements UpdateScan {
     }
 
     @Override
-    public Const get(Expression expr, boolean findFather) {
+    public Const get(Expr expr, boolean findFather) {
         if (idxMap.containsKey(expr.toHashString())) {
             return nowRecord.get(idxMap.get(expr.toHashString()));
         }

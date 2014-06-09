@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 
 import java.util.*;
 
@@ -29,9 +29,9 @@ public class DistinctScan implements Scan {
         int columnCount = getColumnCount();
         for (int i = 0; i < columnCount; ++i) {
             String tbl = getTableName(i);
-            Expression fld = getFieldName(i);
+            Expr fld = getFieldName(i);
             if (fld instanceof ColNameExpr) {
-                Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+                Expr exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
                 exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
@@ -112,7 +112,7 @@ public class DistinctScan implements Scan {
     }
 
     @Override
-    public Expression getFieldName(int columnIndex) {
+    public Expr getFieldName(int columnIndex) {
         return s.getFieldName(columnIndex);
     }
 
@@ -122,7 +122,7 @@ public class DistinctScan implements Scan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findParent) {
+    public Const getColumn(Expr expr, boolean findParent) {
         Const c = s.getColumn(expr, findParent);
         return c;
 //		if (c != null || (!(s instanceof TableScan))) return c;
@@ -131,7 +131,7 @@ public class DistinctScan implements Scan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findParent) {
+    public int getColumnType(Expr expr, boolean findParent) {
         int t = s.getColumnType(expr, findParent);
         return t;
 //		if (t != notFound || (!(s instanceof TableScan))) return t;
@@ -140,7 +140,7 @@ public class DistinctScan implements Scan {
     }
 
     @Override
-    public int getColumnIndex(Expression expr) {
+    public int getColumnIndex(Expr expr) {
         return s.getColumnIndex(expr);
     }
 
@@ -160,7 +160,7 @@ public class DistinctScan implements Scan {
     }
 
     @Override
-    public Const get(Expression expr, boolean findFather) {
+    public Const get(Expr expr, boolean findFather) {
         if (idxMap.containsKey(expr.toHashString())) {
             return nowRecord.get(idxMap.get(expr.toHashString()));
         }

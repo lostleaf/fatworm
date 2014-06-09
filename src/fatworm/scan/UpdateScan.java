@@ -1,7 +1,7 @@
 package fatworm.scan;
 
 import fatworm.constant.Const;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UpdateScan extends Scan {
 
-    public void setValue(Expression expr, Const val);
+    public void setValue(Expr expr, Const val);
 
     public void setValue(int idx, Const val);
 

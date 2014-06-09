@@ -17,12 +17,8 @@ public class OriginProductPlan implements Plan {
 		this.plans = plans;
 		this.parentPlan = parentPlan;
 	}
-	
-	public List<Plan> getPlans() {
-		return plans;
-	}
 
-	@Override
+    @Override
 	public Scan open(Scan father) {
 		Plan p = plans.get(0);
 		for (int i = 1; i < plans.size(); ++i) p = new ProductPlan(p, plans.get(i), parentPlan);
@@ -49,28 +45,6 @@ public class OriginProductPlan implements Plan {
 		HashSet<String> hs = new HashSet<String>();
         for (Plan plan : plans) hs.addAll(plan.getAllTblNames());
 		return hs;
-	}
-
-	@Override
-	public HashSet<String> getAllUsedTblNames() {
-		HashSet<String> hs = new HashSet<String>();
-        for (Plan plan : plans) hs.addAll(plan.getAllUsedTblNames());
-		return hs;
-	}
-
-	@Override
-	public String getTblName(String fldName, boolean findFather) {
-        for (Plan plan : plans) {
-            String tblName = plan.getTblName(fldName, false);
-            if (tblName != null) return tblName;
-        }
-		if (findFather) {
-            for (Plan plan : plans) {
-                String tblName = plan.getTblName(fldName, true);
-                if (tblName != null) return tblName;
-            }
-		}
-		return null;
 	}
 	
 	public String toString() {

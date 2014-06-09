@@ -3,7 +3,7 @@ package fatworm.pred;
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
 import fatworm.expr.ConstExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.plan.Plan;
 import fatworm.plan.ProjectPlan;
 import fatworm.plan.SelectPlan;
@@ -11,7 +11,6 @@ import fatworm.scan.Scan;
 import fatworm.util.ConstUtil;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -19,10 +18,10 @@ import java.util.List;
  */
 public class InPredicate implements Predicate {
 
-    private Expression e;
+    private Expr e;
     private Plan p;
 
-    public InPredicate(Expression e, Plan p) {
+    public InPredicate(Expr e, Plan p) {
         this.e = e;
         this.p = p;
     }
@@ -74,18 +73,6 @@ public class InPredicate implements Predicate {
     public void renameTable(String from, String to) {
         e.renameTable(from, to);
         p.renameTable(from, to);
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        return new HashSet<String>();
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames(Plan p) {
-        HashSet<String> s = e.getTblNames(p);
-        s.addAll(p.getAllUsedTblNames());
-        return s;
     }
 
 }

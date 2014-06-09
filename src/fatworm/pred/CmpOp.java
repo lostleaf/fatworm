@@ -32,17 +32,12 @@ public class CmpOp {
     }
 
     public static boolean doCompare(int compareResult, int cmpOp){
-        if (compareResult > 0 && (cmpOp == CmpOp.GREATER_THAN || cmpOp == CmpOp.GREATER_EQ
-                || cmpOp == CmpOp.NOT_EQUAL))
-            return true;
+        return compareResult > 0 &&
+                (cmpOp == CmpOp.GREATER_THAN || cmpOp == CmpOp.GREATER_EQ || cmpOp == CmpOp.NOT_EQUAL)
+                || compareResult == 0 &&
+                (cmpOp == CmpOp.GREATER_EQ || cmpOp == CmpOp.LESS_EQ || cmpOp == CmpOp.EQUAL) ||
+                compareResult < 0 &&
+                        (cmpOp == CmpOp.LESS_EQ || cmpOp == CmpOp.LESS_THAN || cmpOp == CmpOp.NOT_EQUAL);
 
-        if (compareResult == 0 && (cmpOp == CmpOp.GREATER_EQ || cmpOp == CmpOp.LESS_EQ
-                || cmpOp == CmpOp.EQUAL))
-            return true;
-
-        if (compareResult < 0 && (cmpOp == CmpOp.LESS_EQ || cmpOp == CmpOp.LESS_THAN
-                || cmpOp == CmpOp.NOT_EQUAL))
-            return true;
-        return false;
     }
 }

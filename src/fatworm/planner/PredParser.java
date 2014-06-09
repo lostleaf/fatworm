@@ -1,6 +1,6 @@
 package fatworm.planner;
 
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.handler.Manager;
 import fatworm.parser.FatwormParser;
@@ -46,7 +46,7 @@ public class PredParser {
                 return new NotExistsPredicate(p);
             }
             case FatwormParser.IN: {
-                Expression e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
                 Planner planner = Manager.createPlanner();
                 planner.execute((CommonTree) tree.getChild(1), upFuncs, parentPlan);
@@ -54,7 +54,7 @@ public class PredParser {
                 return new InPredicate(e, p);
             }
             case FatwormParser.ALL: {
-                Expression e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
                 Planner planner = Manager.createPlanner();
                 planner.execute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
@@ -63,7 +63,7 @@ public class PredParser {
                 return new CmpOpAllPredicate(e, p, op);
             }
             case FatwormParser.ANY: {
-                Expression e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
                 Planner planner = Manager.createPlanner();
                 planner.execute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
@@ -80,9 +80,9 @@ public class PredParser {
             case FatwormParser.T__118:
             case FatwormParser.T__119: {
                 int op = CmpOp.getCopFromType(tree.getType());
-                Expression left = ExprPlanner.getExpression((CommonTree) tree.getChild(0),
+                Expr left = ExprPlanner.getExpression((CommonTree) tree.getChild(0),
                         upFuncs, parentPlan);
-                Expression right = ExprPlanner.getExpression((CommonTree) tree.getChild(1),
+                Expr right = ExprPlanner.getExpression((CommonTree) tree.getChild(1),
                         upFuncs, parentPlan);
                 return new CmpOpPredicate(left, right, op);
             }

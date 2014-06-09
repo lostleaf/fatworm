@@ -1,19 +1,17 @@
 package fatworm.pred;
 
 import fatworm.constant.Const;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.plan.Plan;
 import fatworm.scan.Scan;
 
-import java.util.HashSet;
-
 public class CmpOpAllPredicate implements Predicate {
 
-    private Expression e;
+    private Expr e;
     private Plan p;
     private int cop;
 
-    public CmpOpAllPredicate(Expression e, Plan p, int cop) {
+    public CmpOpAllPredicate(Expr e, Plan p, int cop) {
         this.e = e;
         this.p = p;
         this.cop = cop;
@@ -41,21 +39,6 @@ public class CmpOpAllPredicate implements Predicate {
     public void renameTable(String from, String to) {
         e.renameTable(from, to);
         p.renameTable(from, to);
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        return new HashSet<String>();
-//		HashSet<String> s = e.getTblNames(p);
-//		s.addAll(p.getAllUsedTblNames());
-//		return s;
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames(Plan p) {
-        HashSet<String> s = e.getTblNames(p);
-        s.addAll(p.getAllUsedTblNames());
-        return s;
     }
 
 }

@@ -64,19 +64,6 @@ public class ProjectPlan implements Plan {
     }
 
     @Override
-    public String getTblName(String fldName, boolean findFather) {
-        return p.getTblName(fldName, findFather);
-//		if (tblName != null) return tblName;
-//		if (parentPlan == null || (!(p instanceof TablePlan))) return null;
-//		return parentPlan.getTblName(fldName);
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames() {
-        return p.getAllUsedTblNames();
-    }
-
-    @Override
     public Plan getParentPlan() {
         return parentPlan;
     }

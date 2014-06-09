@@ -1,10 +1,7 @@
 package fatworm.memory;
 
 import fatworm.constant.Const;
-import fatworm.handler.Manager;
-import fatworm.meta.RID;
 import fatworm.meta.RecordFile;
-import fatworm.meta.Schema;
 
 import java.util.Iterator;
 import java.util.List;
@@ -14,17 +11,12 @@ import java.util.List;
  */
 public class MemoryRecordFile implements RecordFile {
 
-    private String tblName;
     private List<List<Const>> records;
     private Iterator<List<Const>> iter;
     private List<Const> nowRecord;
-    private Schema schema;
 
     public MemoryRecordFile(String tblName) {
-        this.tblName = tblName;
         records = Memory.records.get(tblName);
-//        System.out.println(Memory.records.keySet());
-        schema = Manager.getDBManager().getCurrentDB().getTable(tblName).getSchema();
         iter = records.iterator();
     }
 
@@ -76,9 +68,6 @@ public class MemoryRecordFile implements RecordFile {
     public void init() {
     }
 
-    @Override
-    public RID getCurrentRid() {
-        return null;
-    }
+
 
 }

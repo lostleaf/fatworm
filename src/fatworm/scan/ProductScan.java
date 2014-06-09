@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,9 +29,9 @@ public class ProductScan implements Scan {
 		int columnCount = getColumnCount();
 		for (int i = 0; i < columnCount; ++i) {
 			String tbl = getTableName(i);
-			Expression fld = getFieldName(i);
+			Expr fld = getFieldName(i);
 			if (fld instanceof ColNameExpr) {
-				Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+				Expr exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
 				idxMap.put(exp.toHashString(), i);
 				exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
 				idxMap.put(exp.toHashString(), i);
@@ -103,7 +103,7 @@ public class ProductScan implements Scan {
 	}
 
 	@Override
-	public Expression getFieldName(int columnIndex) {
+	public Expr getFieldName(int columnIndex) {
 		if (columnIndex < s1.getColumnCount()) {
 			return s1.getFieldName(columnIndex);
 		} else {
@@ -121,7 +121,7 @@ public class ProductScan implements Scan {
 	}
 
     @Override
-	public Const getColumn(Expression expr, boolean findParent) {
+	public Const getColumn(Expr expr, boolean findParent) {
 		Const c = s1.getColumn(expr, false);
 		if (c != null) return c;
 		c = s2.getColumn(expr, findParent);
@@ -134,7 +134,7 @@ public class ProductScan implements Scan {
 	}
 
 	@Override
-	public int getColumnType(Expression expr, boolean findParent) {
+	public int getColumnType(Expr expr, boolean findParent) {
 		int type = s1.getColumnType(expr, false);
 		if (type != notFound) return type;
 		type = s2.getColumnType(expr, findParent);
@@ -149,7 +149,7 @@ public class ProductScan implements Scan {
 	}
 
 	@Override
-	public int getColumnIndex(Expression expr) {
+	public int getColumnIndex(Expr expr) {
 		int index = s1.getColumnIndex(expr);
 		if (index != notFound) return index;
 		index = s2.getColumnIndex(expr);
@@ -173,7 +173,7 @@ public class ProductScan implements Scan {
 	}
 
 	@Override
-	public Const get(Expression expr, boolean findFather) {
+	public Const get(Expr expr, boolean findFather) {
 		if (idxMap.containsKey(expr.toHashString())) {
 			return nowRecord.get(idxMap.get(expr.toHashString()));
 		}

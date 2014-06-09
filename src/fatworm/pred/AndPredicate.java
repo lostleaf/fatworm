@@ -1,9 +1,6 @@
 package fatworm.pred;
 
-import fatworm.plan.Plan;
 import fatworm.scan.Scan;
-
-import java.util.HashSet;
 
 /**
  * Created by lostleaf on 14-6-7.
@@ -31,29 +28,14 @@ public class AndPredicate implements Predicate {
     }
 
     public String toString() {
-        return "Predicate and: ( " + left.toString() + ", " + right.toString() + " ) ";
+        return "Predicate and: ( " +
+                left.toString() + ", " + right.toString() + " ) ";
     }
 
     @Override
     public void renameTable(String from, String to) {
         left.renameTable(from, to);
         right.renameTable(from, to);
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        HashSet<String> sleft = left.getTblNames(p);
-        HashSet<String> sright = right.getTblNames(p);
-        sleft.addAll(sright);
-        return sleft;
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames(Plan p) {
-        HashSet<String> sleft = left.getAllUsedTblNames(p);
-        HashSet<String> sright = right.getAllUsedTblNames(p);
-        sleft.addAll(sright);
-        return sleft;
     }
 
 }

@@ -19,10 +19,6 @@ public interface Plan {
 
     public HashSet<String> getAllTblNames();
 
-    public HashSet<String> getAllUsedTblNames();
-
-    public String getTblName(String fldName, boolean findFather);
-
     public Plan getParentPlan();
 
 }

@@ -2,13 +2,14 @@ package fatworm.handler;
 
 import fatworm.constant.Const;
 import fatworm.memory.Memory;
-import fatworm.memory.MemoryRecordFile;
-import fatworm.meta.RecordFile;
 import fatworm.meta.Schema;
 import fatworm.meta.Table;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lostleaf on 14-6-5.
@@ -28,23 +29,12 @@ public class Database implements Serializable {
         name = name.toLowerCase();
         Table table = new Table(name, schema);
         tables.put(name, table);
-//        System.out.println(schema);
         Memory.records.put(name, new ArrayList<List<Const>>());
-        RecordFile rf = new MemoryRecordFile(name);
-        //table.getEmptyBlock();
-        rf.init();
-        rf.close();
-
-        String primary = table.getSchema().getPrimary();
-        if (primary != null) {
-            table.createIndex(primary, "shit_primary");
-        }
-
     }
 
     public void dropTable(String name) {
         name = name.toLowerCase();
-        Table table = tables.remove(name);
+        tables.remove(name);
         if(Memory.records != null && Memory.records.containsKey(name))
             Memory.records.remove(name);
     }

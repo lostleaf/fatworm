@@ -27,6 +27,5 @@ public interface RecordFile {
 
     public void close();
 
-    public RID getCurrentRid();
 
 }

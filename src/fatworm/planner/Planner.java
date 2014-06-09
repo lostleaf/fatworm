@@ -44,9 +44,9 @@ public class Planner {
             FatwormParser parser = new FatwormParser(tokens);
             CommonTree t = (CommonTree) parser.statement().getTree();
 
-            List<FuncExpr> funcs = new ArrayList<FuncExpr>();
-            execute(t, funcs, null);
+            execute(t, new ArrayList<FuncExpr>(), null);
         } catch (Exception e) {
+            isQuery = false;
             e.printStackTrace();
         }
     }

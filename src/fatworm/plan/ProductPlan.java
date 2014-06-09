@@ -52,29 +52,6 @@ public class ProductPlan implements Plan {
 	}
 
 	@Override
-	public String getTblName(String fldName, boolean findFather) {
-		String tblName = p1.getTblName(fldName, false);
-		if (tblName != null) return tblName;
-		tblName = p2.getTblName(fldName, findFather);
-		if (tblName != null) return tblName;
-		if (findFather) {
-			tblName = p1.getTblName(fldName, true);
-			if (tblName != null) return tblName;
-		}
-		return null;
-//		if (father == null || (!(p1 instanceof TablePlan && p2 instanceof TablePlan))) return null;
-//		return father.getTblName(fldName);
-	}
-
-	@Override
-	public HashSet<String> getAllUsedTblNames() {
-		HashSet<String> s1 = p1.getAllUsedTblNames();
-		HashSet<String> s2 = p2.getAllUsedTblNames();
-		s1.addAll(s2);
-		return s1;
-	}
-
-	@Override
 	public Plan getParentPlan() {
 		return father;
 	}

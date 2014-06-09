@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.util.Compare;
 
 import java.util.*;
@@ -33,9 +33,9 @@ public class OrderScan implements Scan {
         int columnCount = getColumnCount();
         for (int i = 0; i < columnCount; ++i) {
             String tbl = getTableName(i);
-            Expression fld = getFieldName(i);
+            Expr fld = getFieldName(i);
             if (fld instanceof ColNameExpr) {
-                Expression exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
+                Expr exp = new ColNameExpr(tbl, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
                 exp = new ColNameExpr(null, ((ColNameExpr)fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
@@ -121,7 +121,7 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public Expression getFieldName(int columnIndex) {
+    public Expr getFieldName(int columnIndex) {
         return s.getFieldName(columnIndex);
     }
 
@@ -131,7 +131,7 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findParent) {
+    public Const getColumn(Expr expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return nowItem.get(idx);
         if (father == null || !findParent) return null;
@@ -142,7 +142,7 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findParent) {
+    public int getColumnType(Expr expr, boolean findParent) {
         int idx = getColumnIndex(expr);
         if (idx != notFound) return getColumnType(idx);
         if (father == null || !findParent) return notFound;
@@ -153,7 +153,7 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public int getColumnIndex(Expression expr) {
+    public int getColumnIndex(Expr expr) {
         int columnCount = s.getColumnCount();
         int index = -1;
         for (int i = 0; i < columnCount; ++i) {
@@ -182,7 +182,7 @@ public class OrderScan implements Scan {
     }
 
     @Override
-    public Const get(Expression expr, boolean findFather) {
+    public Const get(Expr expr, boolean findFather) {
         if (idxMap.containsKey(expr.toHashString())) {
             return nowRecord.get(idxMap.get(expr.toHashString()));
         }

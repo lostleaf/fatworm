@@ -2,15 +2,12 @@ package fatworm.expr;
 
 import fatworm.constant.Const;
 import fatworm.constant.DefaultConst;
-import fatworm.plan.Plan;
 import fatworm.scan.Scan;
-
-import java.util.HashSet;
 
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class DefaultExpr implements Expression {
+public class DefaultExpr implements Expr {
 
     public DefaultExpr() {
 
@@ -32,11 +29,6 @@ public class DefaultExpr implements Expression {
 
     @Override
     public void renameTable(String from, String to) {
-    }
-
-    @Override
-    public HashSet<String> getTblNames(Plan p) {
-        return new HashSet<String>();
     }
 
     @Override

@@ -1,16 +1,14 @@
 package fatworm.expr;
 
 import fatworm.constant.Const;
-import fatworm.plan.Plan;
 import fatworm.scan.Scan;
 
 import java.sql.Types;
-import java.util.HashSet;
 
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class FuncExpr implements Expression {
+public class FuncExpr implements Expr {
 
     private ColNameExpr colName;
     private int func;
@@ -50,14 +48,7 @@ public class FuncExpr implements Expression {
     }
 
     public String toString() {
-        StringBuffer s = new StringBuffer("Function ( ");
-        s.append("func: ");
-        s.append(func);
-        s.append(", ");
-        s.append("colName: (");
-        s.append(colName.toString());
-        s.append(") )");
-        return s.toString();
+        return "Function ( " + "func: " + func + ", " + "colName: (" + colName.toString() + ") )";
     }
 
     @Override
@@ -66,16 +57,8 @@ public class FuncExpr implements Expression {
     }
 
     @Override
-    public HashSet<String> getTblNames(Plan p) {
-        return colName.getTblNames(p);
-    }
-
-    @Override
     public String toHashString() {
-        StringBuffer s = new StringBuffer(String.valueOf(func));
-        s.append(',');
-        s.append(colName.toHashString());
-        return s.toString();
+        return String.valueOf(func) + ',' + colName.toHashString();
     }
 
 }

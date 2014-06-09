@@ -2,7 +2,7 @@ package fatworm.scan;
 
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.pred.Predicate;
 
 import java.util.HashMap;
@@ -28,9 +28,9 @@ public class SelectScan implements UpdateScan {
         int columnCount = getColumnCount();
         for (int i = 0; i < columnCount; ++i) {
             String tbl = getTableName(i);
-            Expression fld = getFieldName(i);
+            Expr fld = getFieldName(i);
             if (fld instanceof ColNameExpr) {
-                Expression exp = new ColNameExpr(tbl, ((ColNameExpr) fld).getFldName());
+                Expr exp = new ColNameExpr(tbl, ((ColNameExpr) fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
                 exp = new ColNameExpr(null, ((ColNameExpr) fld).getFldName());
                 idxMap.put(exp.toHashString(), i);
@@ -77,7 +77,7 @@ public class SelectScan implements UpdateScan {
     }
 
     @Override
-    public Expression getFieldName(int columnIndex) {
+    public Expr getFieldName(int columnIndex) {
         return s.getFieldName(columnIndex);
     }
 
@@ -87,19 +87,17 @@ public class SelectScan implements UpdateScan {
     }
 
     @Override
-    public Const getColumn(Expression expr, boolean findParent) {
-        Const c = s.getColumn(expr, findParent);
-        return c;
+    public Const getColumn(Expr expr, boolean findParent) {
+        return s.getColumn(expr, findParent);
     }
 
     @Override
-    public int getColumnType(Expression expr, boolean findParent) {
-        int t = s.getColumnType(expr, findParent);
-        return t;
+    public int getColumnType(Expr expr, boolean findParent) {
+        return s.getColumnType(expr, findParent);
     }
 
     @Override
-    public int getColumnIndex(Expression expr) {
+    public int getColumnIndex(Expr expr) {
         return s.getColumnIndex(expr);
     }
 
@@ -109,7 +107,7 @@ public class SelectScan implements UpdateScan {
     }
 
     @Override
-    public void setValue(Expression expr, Const val) {
+    public void setValue(Expr expr, Const val) {
         ((TableScan) s).setValue(expr, val);
     }
 
@@ -139,12 +137,12 @@ public class SelectScan implements UpdateScan {
     }
 
     @Override
-    public Const get(Expression expr, boolean findFather) {
+    public Const get(Expr expr, boolean findFather) {
         if (idxMap.containsKey(expr.toHashString())) {
             return nowRecord.get(idxMap.get(expr.toHashString()));
         }
         if (!findFather || father == null) return null;
-        return father.get(expr, findFather);
+        return father.get(expr, true);
     }
 
 }

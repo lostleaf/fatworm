@@ -57,21 +57,6 @@ public class TablePlan implements Plan {
     }
 
     @Override
-    public String getTblName(String fldName, boolean findFather) {
-        int idx = schema.getIdx(fldName);
-        if (idx >= 0) return tblName;
-        if (!findFather) return null;
-        return father.getTblName(fldName, true);
-    }
-
-    @Override
-    public HashSet<String> getAllUsedTblNames() {
-        HashSet<String> s = new HashSet<String>();
-        s.add(tblName);
-        return s;
-    }
-
-    @Override
     public Plan getParentPlan() {
         return father;
     }

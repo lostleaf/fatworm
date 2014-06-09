@@ -4,7 +4,7 @@ import fatworm.constant.Const;
 import fatworm.constant.DecimalConst;
 import fatworm.constant.IntegerConst;
 import fatworm.constant.NullConst;
-import fatworm.expr.Expression;
+import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
 import fatworm.expr.Function;
 import fatworm.expr.Operator;
@@ -21,23 +21,17 @@ import java.util.ArrayList;
  * Created by lostleaf on 14-6-5.
  */
 public class Attribute implements Serializable {
-    private String tblName, attrName;
+    private String attrName;
     private Const defaultValue;
     private boolean autoIncrement;
     private Type type;
 
-    public Attribute(String tblName, String attrName, Type type, Const defaultValue,
-                     boolean mustNull, boolean mustNotNull, boolean autoIncre) {
-        this.tblName = tblName.toLowerCase();
+    public Attribute(String attrName, Type type, Const defaultValue, boolean autoInc) {
         this.attrName = attrName.toLowerCase();
         this.type = type;
         this.defaultValue = defaultValue;
-        this.autoIncrement = autoIncre;
-        if (autoIncre) this.defaultValue = new IntegerConst(0);
-    }
-
-    public String getTblName() {
-        return tblName;
+        this.autoIncrement = autoInc;
+        if (autoInc) this.defaultValue = new IntegerConst(0);
     }
 
     public String getAttrName() {
@@ -59,7 +53,7 @@ public class Attribute implements Serializable {
 
     public Const getNewConstant(CommonTree tree) {
         if (tree.getText().toLowerCase().equals("null")) return new NullConst();
-        Expression expr = ExprPlanner.getExpression(tree, new ArrayList<FuncExpr>(), null);
+        Expr expr = ExprPlanner.getExpression(tree, new ArrayList<FuncExpr>(), null);
         Const c = expr.getResult(null);
         switch (type.getType()) {
             case Types.INTEGER:
