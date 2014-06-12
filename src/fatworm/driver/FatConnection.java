@@ -1,6 +1,6 @@
 package fatworm.driver;
 
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 
 import java.io.File;
 import java.sql.*;
@@ -13,12 +13,12 @@ import java.util.concurrent.Executor;
  */
 public class FatConnection implements Connection {
     public FatConnection(File file) {
-        Manager.init(file);
+        Fucker.init(file);
     }
 
     @Override
     public void close() throws SQLException {
-        Manager.close();
+        Fucker.close();
     }
 
     @Override

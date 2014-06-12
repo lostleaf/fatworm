@@ -19,10 +19,10 @@ public class OriginProductPlan implements Plan {
 	}
 
     @Override
-	public Scan open(Scan father) {
+	public Scan open(Scan parentScan) {
 		Plan p = plans.get(0);
 		for (int i = 1; i < plans.size(); ++i) p = new ProductPlan(p, plans.get(i), parentPlan);
-		return p.open(father);
+		return p.open(parentScan);
 	}
 
 	@Override

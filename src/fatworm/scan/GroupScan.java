@@ -7,7 +7,7 @@ import fatworm.constant.NullConst;
 import fatworm.expr.ColNameExpr;
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.expr.Function;
+import fatworm.util.Function;
 import fatworm.util.Compare;
 import fatworm.util.ConstUtil;
 
@@ -270,8 +270,8 @@ public class GroupScan implements Scan {
         if (idx != notFound) return getColumn(idx);
         if (father == null || !findParent) return null;
         return father.getColumn(expr, true);
-//		if (father == null || !(s instanceof TableScan)) return null;
-//		return father.getColumn(expr);
+//		if (parentPlan == null || !(s instanceof TableScan)) return null;
+//		return parentPlan.getColumn(expr);
     }
 
     @Override
@@ -281,8 +281,8 @@ public class GroupScan implements Scan {
         if (father == null || !findParent) return notFound;
         return father.getColumnType(expr, true);
 //		if (!(s instanceof TableScan)) return notFound;
-//		if (father == null) return notFound;
-//		return father.getColumnType(expr);
+//		if (parentPlan == null) return notFound;
+//		return parentPlan.getColumnType(expr);
     }
 
     @Override

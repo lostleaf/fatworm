@@ -1,6 +1,7 @@
 package fatworm.planner;
 
 import fatworm.expr.FuncExpr;
+import fatworm.handler.Fucker;
 import fatworm.parser.FatwormLexer;
 import fatworm.parser.FatwormParser;
 import fatworm.plan.Plan;
@@ -14,26 +15,26 @@ import java.util.List;
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class Planner {
+public class Sucker {
     private QueryPlanner queryPlanner;
-    private UpdatePlanner updatePlanner;
+    private UpdateExecutor updateExecutor;
     public boolean isQuery;
     private Plan queryPlan;
 
-    public Planner() {
-        this(new QueryPlanner(), new UpdatePlanner());
+    public Sucker() {
+        this(new QueryPlanner(), new UpdateExecutor());
     }
 
-    public Planner(QueryPlanner queryPlanner, UpdatePlanner updatePlanner) {
+    public Sucker(QueryPlanner queryPlanner, UpdateExecutor updateExecutor) {
         this.queryPlanner = queryPlanner;
-        this.updatePlanner = updatePlanner;
+        this.updateExecutor = updateExecutor;
     }
 
     public Plan getQueryPlan() {
         return queryPlan;
     }
 
-    public void execute(String sql) {
+    public void doExecute(String sql) {
         try {
             while (sql.endsWith(";"))
                 sql = sql.substring(0, sql.length() - 1);
@@ -44,20 +45,26 @@ public class Planner {
             FatwormParser parser = new FatwormParser(tokens);
             CommonTree t = (CommonTree) parser.statement().getTree();
 
-            execute(t, new ArrayList<FuncExpr>(), null);
+            doExecute(t, new ArrayList<FuncExpr>(), null);
         } catch (Exception e) {
             isQuery = false;
             e.printStackTrace();
         }
     }
 
-    public void execute(CommonTree t, List<FuncExpr> funcs, Plan plan) {
+    public void execute(String sql){
+        doExecute(sql);
+        if (isQuery)
+            Fucker.storeSQL(sql);
+    }
+
+    public void doExecute(CommonTree t, List<FuncExpr> funcs, Plan plan) {
         isQuery = t.getType() == FatwormParser.SELECT || t.getType() == FatwormParser.SELECT_DISTINCT;
         if (isQuery) {
             queryPlan = queryPlanner.getPlan(t, funcs, plan);
 //            System.out.println(queryPlan);
         }
         else
-            updatePlanner.executeUpdate(t, plan);
+            updateExecutor.executeUpdate(t, plan);
     }
 }

@@ -7,19 +7,19 @@ import java.util.HashSet;
 public class ProductPlan implements Plan {
 	
 	private Plan p1, p2;
-	private Plan father;
+	private Plan parentPlan;
 	
-	public ProductPlan(Plan p1, Plan p2, Plan father) {
+	public ProductPlan(Plan p1, Plan p2, Plan parentPlan) {
 		this.p1 = p1;
 		this.p2 = p2;
-		this.father = father;
+		this.parentPlan = parentPlan;
 	}
 
 	@Override
-	public Scan open(Scan father) {
-		Scan s1 = p1.open(father);
-		Scan s2 = p2.open(father);
-        return new ProductScan(s1, s2, father);
+	public Scan open(Scan parentScan) {
+		Scan s1 = p1.open(parentScan);
+		Scan s2 = p2.open(parentScan);
+        return new ProductScan(s1, s2, parentScan);
 	}
 	
 	public String toString() {
@@ -53,6 +53,6 @@ public class ProductPlan implements Plan {
 
 	@Override
 	public Plan getParentPlan() {
-		return father;
+		return parentPlan;
 	}
 }

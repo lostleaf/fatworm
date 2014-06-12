@@ -4,7 +4,7 @@ import fatworm.constant.Const;
 import fatworm.constant.NullConst;
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.meta.Attribute;
 import fatworm.meta.Schema;
 import fatworm.parser.FatwormParser;
@@ -24,20 +24,20 @@ import java.util.List;
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class UpdatePlanner {
+public class UpdateExecutor {
     public void executeUpdate(CommonTree tree, Plan parentPlan) {
 //        System.out.println(tree.toStringTree());
 
         String name = tree.getChild(0).getText();
         switch (tree.getType()) {
             case FatwormParser.CREATE_DATABASE:
-                Manager.getDBManager().addDatabase(name);
+                Fucker.getDBManager().addDatabase(name);
                 break;
             case FatwormParser.USE_DATABASE:
-                Manager.getDBManager().useDatabase(name);
+                Fucker.getDBManager().useDatabase(name);
                 break;
             case FatwormParser.DROP_DATABASE:
-                Manager.getDBManager().dropDatabase(name);
+                Fucker.getDBManager().dropDatabase(name);
                 break;
             case FatwormParser.CREATE_TABLE:
                 createTable(tree);
@@ -45,7 +45,7 @@ public class UpdatePlanner {
             case FatwormParser.DROP_TABLE:
                 int count = tree.getChildCount();
                 for (int i = 0; i < count; i++)
-                    Manager.getDBManager().getCurrentDB().dropTable(tree.getChild(i).getText());
+                    Fucker.getDBManager().getCurrentDB().dropTable(tree.getChild(i).getText());
                 break;
             case FatwormParser.INSERT_VALUES:
                 InsertExecutor.insertValue(tree, parentPlan);
@@ -69,19 +69,16 @@ public class UpdatePlanner {
         int childNum = tree.getChildCount();
         String tblName = tree.getChild(0).getText();
         Schema schema = new Schema();
-        String primary_key = null;
         for (int i = 1; i < childNum; ++i) {
-            CommonTree def = (CommonTree) tree.getChild(i);
-            if (def.getType() == FatwormParser.PRIMARY_KEY) {
-                primary_key = def.getChild(0).getText();
-                continue;
-            }
-            String attrName = def.getChild(0).getText();
+            CommonTree treeChild = (CommonTree) tree.getChild(i);
+            if (treeChild.getType() == FatwormParser.PRIMARY_KEY) continue;
+
+            String attrName = treeChild.getChild(0).getText();
             int len1, len2;
             Type type = null;
-            boolean mustNull = false, mustNotNull = false, autoIncre = false;
+            boolean autoInc = false;
             Const defaultValue = new NullConst();
-            switch (def.getChild(1).getType()) {
+            switch (treeChild.getChild(1).getType()) {
                 case FatwormParser.INT:
                     type = new IntegerType();
                     break;
@@ -89,11 +86,11 @@ public class UpdatePlanner {
                     type = new FloatType();
                     break;
                 case FatwormParser.CHAR:
-                    len1 = Integer.valueOf(def.getChild(1).getChild(0).getText());
+                    len1 = Integer.valueOf(treeChild.getChild(1).getChild(0).getText());
                     type = new CharType(len1);
                     break;
                 case FatwormParser.VARCHAR:
-                    len1 = Integer.valueOf(def.getChild(1).getChild(0).getText());
+                    len1 = Integer.valueOf(treeChild.getChild(1).getChild(0).getText());
                     type = new VarcharType(len1);
                     break;
                 case FatwormParser.DATETIME:
@@ -104,37 +101,35 @@ public class UpdatePlanner {
                     type = new BooleanType();
                     break;
                 case FatwormParser.DECIMAL:
-                    len1 = Integer.valueOf(def.getChild(1).getChild(0).getText());
-                    if (def.getChild(1).getChildCount() > 1) {
-                        len2 = Integer.valueOf(def.getChild(1).getChild(1).getText());
+                    len1 = Integer.valueOf(treeChild.getChild(1).getChild(0).getText());
+                    if (treeChild.getChild(1).getChildCount() > 1) {
+                        len2 = Integer.valueOf(treeChild.getChild(1).getChild(1).getText());
                     } else {
                         len2 = 0;
                     }
                     type = new DecimalType(len1, len2);
                     break;
             }
-            int defColNum = def.getChildCount();
+            int defColNum = treeChild.getChildCount();
             for (int j = 2; j < defColNum; ++j) {
-                CommonTree defsuf = (CommonTree) def.getChild(j);
-                switch (defsuf.getType()) {
+                CommonTree treeChildChild = (CommonTree) treeChild.getChild(j);
+                switch (treeChildChild.getType()) {
                     case FatwormParser.NULL:
-                        if (defsuf.getChildCount() == 1) mustNotNull = true;
-                        else mustNull = true;
                         break;
                     case FatwormParser.AUTO_INCREMENT:
-                        autoIncre = true;
+                        autoInc = true;
                         break;
                     case FatwormParser.DEFAULT:
-                        defaultValue = type.toConst(defsuf.getChild(0).getText());
+                        defaultValue = type.toConst(treeChildChild.getChild(0).getText());
                         break;
                 }
             }
             Attribute attr = new Attribute(attrName, type, defaultValue,
-                    autoIncre);
+                    autoInc);
             schema.addAttribute(attr);
         }
 //        if (primary_key != null) schema.setPrimary(primary_key);
-        Manager.getDBManager().getCurrentDB().addTable(tblName, schema);
+        Fucker.getDBManager().getCurrentDB().addTable(tblName, schema);
     }
 
 
@@ -143,18 +138,14 @@ public class UpdatePlanner {
         Plan p = new TablePlan(tblName, fatherPlan);
         if (tree.getChildCount() == 1) {
             TableScan s = (TableScan) p.open(null);
-            while (s.next()) {
-                s.delete();
-            }
+            while (s.next()) s.delete();
             s.close();
         } else {
             p = new SelectPlan(p,
                     PredParser.getPredicate((CommonTree) tree.getChild(1).getChild(0), upFuncs, p),
                     fatherPlan);
             SelectScan s = (SelectScan) p.open(null);
-            while (s.next()) {
-                s.delete();
-            }
+            while (s.next()) s.delete();
             s.close();
         }
     }
@@ -164,27 +155,25 @@ public class UpdatePlanner {
         Plan p = new TablePlan(tblName, parentPlan);
         int childNum = tree.getChildCount();
         UpdateScan s;
-        int totalChild;
+        int totalChild = childNum;
 
         if (tree.getChild(childNum - 1).getType() == FatwormParser.WHERE) {
             p = new SelectPlan(p,
-                    PredParser.getPredicate(
-                            (CommonTree) tree.getChild(childNum - 1).getChild(0), upFuncs, p),
-                    parentPlan);
+                    PredParser.getPredicate((CommonTree) tree.getChild(childNum - 1).getChild(0), upFuncs, p),
+                    parentPlan
+            );
             s = (SelectScan) p.open(null);
-            totalChild = childNum - 1;
-        } else {
+            totalChild--;
+        } else
             s = (TableScan) p.open(null);
-            totalChild = childNum;
-        }
 //        System.out.println(s.getClass() + " " + totalChild);
         while (s.next()) {
             for (int i = 1; i < totalChild; ++i) {
                 CommonTree updatePair = (CommonTree) tree.getChild(i);
 //                System.err.println(updatePair.toStringTree());
-                Expr colName = ExprPlanner.getExpression(
+                Expr colName = ExprParser.getExpression(
                         (CommonTree) updatePair.getChild(0), upFuncs, p);
-                Expr expr = ExprPlanner.getExpression(
+                Expr expr = ExprParser.getExpression(
                         (CommonTree) updatePair.getChild(1), upFuncs, p);
 //                System.out.println(expr);
                 Const c = expr.getResult(s);

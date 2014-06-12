@@ -144,8 +144,8 @@ public class ProductScan implements Scan {
 			if (type != notFound) return type;
 		}
 		return notFound;
-//		if (father == null || !(s1 instanceof TableScan && s2 instanceof TableScan)) return notFound;
-//		return father.getColumnType(expr);
+//		if (parentPlan == null || !(s1 instanceof TableScan && s2 instanceof TableScan)) return notFound;
+//		return parentPlan.getColumnType(expr);
 	}
 
 	@Override

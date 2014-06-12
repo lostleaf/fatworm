@@ -1,7 +1,5 @@
 package fatworm.plan;
 
-import fatworm.handler.Manager;
-import fatworm.meta.Schema;
 import fatworm.scan.Scan;
 import fatworm.scan.TableScan;
 
@@ -13,22 +11,16 @@ import java.util.HashSet;
 public class TablePlan implements Plan {
 
     protected String tblName;
-    protected Schema schema;
-    protected Plan father;
+    protected Plan parentPlan;
 
-    public TablePlan(String tblName, Plan father) {
+    public TablePlan(String tblName, Plan parentPlan) {
         this.tblName = tblName.toLowerCase();
-        schema = Manager.getDBManager().getCurrentDB().getTable(tblName).getSchema();
-        this.father = father;
-    }
-
-    public String getTblName() {
-        return tblName;
+        this.parentPlan = parentPlan;
     }
 
     @Override
-    public Scan open(Scan father) {
-        return new TableScan(tblName, father);
+    public Scan open(Scan parentScan) {
+        return new TableScan(tblName, parentScan);
     }
 
     public String toString() {
@@ -41,13 +33,10 @@ public class TablePlan implements Plan {
     }
 
     @Override
-    public void setPlan(Plan p) {
-
-    }
+    public void setPlan(Plan p) {}
 
     @Override
-    public void renameTable(String from, String to) {
-    }
+    public void renameTable(String from, String to) {}
 
     @Override
     public HashSet<String> getAllTblNames() {
@@ -58,6 +47,6 @@ public class TablePlan implements Plan {
 
     @Override
     public Plan getParentPlan() {
-        return father;
+        return parentPlan;
     }
 }

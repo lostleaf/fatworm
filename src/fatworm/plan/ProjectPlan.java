@@ -27,9 +27,9 @@ public class ProjectPlan implements Plan {
     }
 
     @Override
-    public Scan open(Scan father) {
-        Scan s = p.open(father);
-        s = new ProjectScan(s, projs, father);
+    public Scan open(Scan parentScan) {
+        Scan s = p.open(parentScan);
+        s = new ProjectScan(s, projs, parentScan);
         return s;
     }
 
@@ -53,9 +53,7 @@ public class ProjectPlan implements Plan {
     @Override
     public void renameTable(String from, String to) {
         p.renameTable(from, to);
-        for (ColNameExpr cne : projs) {
-            cne.renameTable(from, to);
-        }
+        for (ColNameExpr cne : projs) cne.renameTable(from, to);
     }
 
     @Override

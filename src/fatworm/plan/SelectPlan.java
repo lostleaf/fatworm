@@ -25,9 +25,9 @@ public class SelectPlan implements Plan {
     }
 
     @Override
-    public Scan open(Scan father) {
-        Scan s = plan.open(father);
-        s = new SelectScan(s, pred, father);
+    public Scan open(Scan parentScan) {
+        Scan s = plan.open(parentScan);
+        s = new SelectScan(s, pred, parentScan);
         return s;
     }
     @Override

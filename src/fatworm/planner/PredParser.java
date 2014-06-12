@@ -2,7 +2,7 @@ package fatworm.planner;
 
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.parser.FatwormParser;
 import fatworm.plan.Plan;
 import fatworm.pred.*;
@@ -34,39 +34,39 @@ public class PredParser {
                 return new AndPredicate(right, left);
             }
             case FatwormParser.EXISTS: {
-                Planner planner = Manager.createPlanner();
-                planner.execute((CommonTree) tree.getChild(0), upFuncs, parentPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute((CommonTree) tree.getChild(0), upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 return new ExistsPredicate(p);
             }
             case FatwormParser.NOT_EXISTS: {
-                Planner planner = Manager.createPlanner();
-                planner.execute((CommonTree) tree.getChild(0), upFuncs, parentPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute((CommonTree) tree.getChild(0), upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 return new NotExistsPredicate(p);
             }
             case FatwormParser.IN: {
-                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprParser.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
-                Planner planner = Manager.createPlanner();
-                planner.execute((CommonTree) tree.getChild(1), upFuncs, parentPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute((CommonTree) tree.getChild(1), upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 return new InPredicate(e, p);
             }
             case FatwormParser.ALL: {
-                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprParser.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
-                Planner planner = Manager.createPlanner();
-                planner.execute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 int op = CmpOp.getCopFromType(tree.getChild(1).getType());
                 return new CmpOpAllPredicate(e, p, op);
             }
             case FatwormParser.ANY: {
-                Expr e = ExprPlanner.getExpression((CommonTree) tree.getChild(0), upFuncs,
+                Expr e = ExprParser.getExpression((CommonTree) tree.getChild(0), upFuncs,
                         parentPlan);
-                Planner planner = Manager.createPlanner();
-                planner.execute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute((CommonTree) tree.getChild(2), upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 int op = CmpOp.getCopFromType(tree.getChild(1).getType());
                 return new CmpOpAnyPredicate(e, p, op);
@@ -80,9 +80,9 @@ public class PredParser {
             case FatwormParser.T__118:
             case FatwormParser.T__119: {
                 int op = CmpOp.getCopFromType(tree.getType());
-                Expr left = ExprPlanner.getExpression((CommonTree) tree.getChild(0),
+                Expr left = ExprParser.getExpression((CommonTree) tree.getChild(0),
                         upFuncs, parentPlan);
-                Expr right = ExprPlanner.getExpression((CommonTree) tree.getChild(1),
+                Expr right = ExprParser.getExpression((CommonTree) tree.getChild(1),
                         upFuncs, parentPlan);
                 return new CmpOpPredicate(left, right, op);
             }

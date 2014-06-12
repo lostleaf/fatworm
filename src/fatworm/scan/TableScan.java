@@ -3,8 +3,8 @@ package fatworm.scan;
 import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
 import fatworm.expr.Expr;
+import fatworm.handler.Fucker;
 import fatworm.util.Compare;
-import fatworm.handler.Manager;
 import fatworm.memory.MemoryRecordFile;
 import fatworm.meta.Attribute;
 import fatworm.meta.RecordFile;
@@ -34,7 +34,7 @@ public class TableScan implements UpdateScan {
         this.tblName = tblName;
         this.father = father;
         rf = new MemoryRecordFile(tblName);
-        table = Manager.getDBManager().getCurrentDB().getTable(tblName);
+        table = Fucker.getDBManager().getCurrentDB().getTable(tblName);
         schema = table.getSchema();
         attrs = schema.getAttributes();
         columnCount = attrs.size();

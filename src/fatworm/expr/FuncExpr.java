@@ -2,6 +2,7 @@ package fatworm.expr;
 
 import fatworm.constant.Const;
 import fatworm.scan.Scan;
+import fatworm.util.Function;
 
 import java.sql.Types;
 

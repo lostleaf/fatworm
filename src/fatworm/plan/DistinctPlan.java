@@ -16,9 +16,9 @@ public class DistinctPlan implements Plan {
 	}
 	
 	@Override
-	public Scan open(Scan father) {
-		Scan s = p.open(father);
-		s = new DistinctScan(s, father);
+	public Scan open(Scan parentScan) {
+		Scan s = p.open(parentScan);
+		s = new DistinctScan(s, parentScan);
 		return s;
 	}
 	

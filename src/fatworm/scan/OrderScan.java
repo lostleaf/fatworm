@@ -137,8 +137,8 @@ public class OrderScan implements Scan {
         if (father == null || !findParent) return null;
         return father.getColumn(expr, true);
 //		if (!(s instanceof TableScan)) return null;
-//		if (father == null) return null;
-//		return father.getColumn(expr);
+//		if (parentPlan == null) return null;
+//		return parentPlan.getColumn(expr);
     }
 
     @Override
@@ -148,8 +148,8 @@ public class OrderScan implements Scan {
         if (father == null || !findParent) return notFound;
         return father.getColumnType(expr, true);
 //		if (!(s instanceof TableScan)) return notFound;
-//		if (father == null) return notFound;
-//		return father.getColumnType(expr);
+//		if (parentPlan == null) return notFound;
+//		return parentPlan.getColumnType(expr);
     }
 
     @Override

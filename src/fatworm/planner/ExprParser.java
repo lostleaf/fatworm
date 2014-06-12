@@ -5,9 +5,11 @@ import fatworm.constant.DecimalConst;
 import fatworm.constant.IntegerConst;
 import fatworm.constant.StringConst;
 import fatworm.expr.*;
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.parser.FatwormParser;
 import fatworm.plan.Plan;
+import fatworm.util.Function;
+import fatworm.util.Operator;
 import org.antlr.runtime.tree.CommonTree;
 
 import java.util.List;
@@ -15,8 +17,8 @@ import java.util.List;
 /**
  * Created by lostleaf on 14-6-5.
  */
-public class ExprPlanner {
-    public static Expr getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan fatherPlan) {
+public class ExprParser {
+    public static Expr getExpression(CommonTree tree, List<FuncExpr> upFuncs, Plan parentPlan) {
         switch (tree.getType()) {
             case FatwormParser.T__105: // %
             case FatwormParser.T__108: // *
@@ -25,13 +27,13 @@ public class ExprPlanner {
             case FatwormParser.T__113: // /
                 if (tree.getChildCount() == 2) {
                     int op = Operator.getOpFromType(tree.getType());
-                    Expr left = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
-                    Expr right = getExpression((CommonTree)tree.getChild(1), upFuncs, fatherPlan);
+                    Expr left = getExpression((CommonTree)tree.getChild(0), upFuncs, parentPlan);
+                    Expr right = getExpression((CommonTree)tree.getChild(1), upFuncs, parentPlan);
                     return new BinaryExpr(left, right, op);
                 } else if (tree.getChildCount() == 1) {
                     int op = Operator.getOpFromType(tree.getType());
                     Expr left = new ConstExpr(new IntegerConst(0));
-                    Expr right = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                    Expr right = getExpression((CommonTree)tree.getChild(0), upFuncs, parentPlan);
                     Expr newExpr = new BinaryExpr(left, right, op);
                     if (right instanceof ConstExpr) {
                         return new ConstExpr(newExpr.getResult(null));
@@ -61,8 +63,8 @@ public class ExprPlanner {
                 return new DefaultExpr();
             case FatwormParser.SELECT:
             case FatwormParser.SELECT_DISTINCT:
-                Planner planner = Manager.createPlanner();
-                planner.execute(tree, upFuncs, fatherPlan);
+                Sucker planner = Fucker.createPlanner();
+                planner.doExecute(tree, upFuncs, parentPlan);
                 Plan p = planner.getQueryPlan();
                 return new QueryExpr(p);
             case FatwormParser.AVG:
@@ -71,7 +73,7 @@ public class ExprPlanner {
             case FatwormParser.MAX:
             case FatwormParser.SUM:
                 int func = Function.getFuncFromType(tree.getType());
-                Expr colName = getExpression((CommonTree)tree.getChild(0), upFuncs, fatherPlan);
+                Expr colName = getExpression((CommonTree)tree.getChild(0), upFuncs, parentPlan);
                 FuncExpr funcExpr = new FuncExpr((ColNameExpr)colName, func);
                 upFuncs.add(funcExpr);
                 return funcExpr;

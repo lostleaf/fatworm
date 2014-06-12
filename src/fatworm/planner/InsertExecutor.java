@@ -3,7 +3,7 @@ package fatworm.planner;
 import fatworm.constant.Const;
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.meta.Attribute;
 import fatworm.meta.Schema;
 import fatworm.plan.Plan;
@@ -27,7 +27,7 @@ public class InsertExecutor {
         Plan p = new TablePlan(tblName, parentPlan);
         TableScan s = (TableScan) p.open(null);
         CommonTree values = (CommonTree) tree.getChild(1);
-        List<Attribute> attrs = Manager.getDBManager().getCurrentDB().getTable(tblName).
+        List<Attribute> attrs = Fucker.getDBManager().getCurrentDB().getTable(tblName).
                 getSchema().getAttributes();
         int i = 0;
         List<Const> insertVals = new ArrayList<Const>();
@@ -54,11 +54,11 @@ public class InsertExecutor {
         int childNum = tree.getChildCount();
         CommonTree values = (CommonTree) tree.getChild(childNum - 1);
         int colNum = values.getChildCount();
-        List<Attribute> attrs = Manager.getDBManager().getCurrentDB().getTable(tblName).
+        List<Attribute> attrs = Fucker.getDBManager().getCurrentDB().getTable(tblName).
                 getSchema().getAttributes();
         Map<Integer, Const> vals = new HashMap<Integer, Const>();
         for (int i = 0; i < colNum; ++i) {
-            Expr colNameExpr = ExprPlanner.getExpression((CommonTree) tree.getChild(i + 1),
+            Expr colNameExpr = ExprParser.getExpression((CommonTree) tree.getChild(i + 1),
                     upFuncs, p);
             int index = s.getColumnIndex(colNameExpr);
             if (values.getChild(i).getText().toLowerCase().equals("default")
@@ -86,15 +86,15 @@ public class InsertExecutor {
         String tblName = tree.getChild(0).getText();
         String tmpTable = getNewTableName();
 
-        Schema schema = Manager.getDBManager().getCurrentDB().getTable(tblName).getSchema();
+        Schema schema = Fucker.getDBManager().getCurrentDB().getTable(tblName).getSchema();
         List<Attribute> attrs = schema.getAttributes();
-        Manager.getDBManager().getCurrentDB().addTable(tmpTable, schema);
+        Fucker.getDBManager().getCurrentDB().addTable(tmpTable, schema);
 
         Plan newPlan = new TablePlan(tmpTable, fatherPlan);
         TableScan newScan = (TableScan) newPlan.open(null);
 
-        Planner planner = Manager.createPlanner();
-        planner.execute((CommonTree) tree.getChild(1), upFuncs, fatherPlan);
+        Sucker planner = Fucker.createPlanner();
+        planner.doExecute((CommonTree) tree.getChild(1), upFuncs, fatherPlan);
         Plan subPlan = planner.getQueryPlan();
         Scan subScan = subPlan.open(null);
         int colNum = subScan.getColumnCount();
@@ -120,7 +120,7 @@ public class InsertExecutor {
 
         newScan.close();
         s.close();
-        Manager.getDBManager().getCurrentDB().dropTable(tmpTable);
+        Fucker.getDBManager().getCurrentDB().dropTable(tmpTable);
     }
     private static List<FuncExpr> upFuncs = new ArrayList<FuncExpr>();
     private static int cnt = 0;

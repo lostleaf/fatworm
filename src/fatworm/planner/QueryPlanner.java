@@ -4,7 +4,7 @@ import fatworm.constant.Const;
 import fatworm.expr.ColNameExpr;
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.meta.Schema;
 import fatworm.parser.FatwormParser;
 import fatworm.plan.*;
@@ -28,14 +28,14 @@ public class QueryPlanner {
 //        System.out.println(last);
         Plan p = parseFrom(tree, idxClauses[0], upFuncs, parentPlan);
         p = parseWhere(p, idxClauses[1], tree, upFuncs, parentPlan);
-        
+
         int groupClause = idxClauses[2], havingClause = idxClauses[3], orderClause = idxClauses[4];
         Plan insertGroup = null;
         GroupPlan groupP = null;
 
         if (groupClause >= 0) {
-            groupP = new GroupPlan(p, (ColNameExpr)ExprPlanner.getExpression(
-                    (CommonTree)tree.getChild(groupClause).getChild(0), upFuncs, p), parentPlan);
+            groupP = new GroupPlan(p, (ColNameExpr) ExprParser.getExpression(
+                    (CommonTree) tree.getChild(groupClause).getChild(0), upFuncs, p), parentPlan);
             p = groupP;
             insertGroup = p;
         }
@@ -45,8 +45,9 @@ public class QueryPlanner {
 
         if (havingClause >= 0) {
             p = new SelectPlan(p,
-                    PredParser.getPredicate((CommonTree)tree.getChild(havingClause).getChild(0),
-                            funcs, p), parentPlan);
+                    PredParser.getPredicate((CommonTree) tree.getChild(havingClause).getChild(0),
+                            funcs, p), parentPlan
+            );
             if (insertGroup == null) insertGroup = p;
             insertHaving = p;
         }
@@ -56,37 +57,37 @@ public class QueryPlanner {
         int numProjs = last;
         Map<CommonTree, String> renaming = new HashMap<CommonTree, String>();
         while (last >= 0) {
-            p = getRenamePlan((CommonTree)tree.getChild(last--), p, insertGroup, insertHaving,
+            p = getRenamePlan((CommonTree) tree.getChild(last--), p, insertGroup, insertHaving,
                     renaming, funcs, parentPlan);
             if (projectP == null) projectP = p;
         }
 
         if (orderClause >= 0) {
-            CommonTree subTree = (CommonTree)tree.getChild(orderClause);
+            CommonTree subTree = (CommonTree) tree.getChild(orderClause);
             int son = subTree.getChildCount();
             for (int i = son - 1; i >= 0; --i) {
-                CommonTree t = (CommonTree)subTree.getChild(i);
+                CommonTree t = (CommonTree) subTree.getChild(i);
                 boolean asc = true;
                 if (t.getType() == FatwormParser.DESC) {
-                    t = (CommonTree)t.getChild(0);
+                    t = (CommonTree) t.getChild(0);
                     asc = false;
                 } else if (t.getType() == FatwormParser.ASC) {
-                    t = (CommonTree)t.getChild(0);
+                    t = (CommonTree) t.getChild(0);
                 }
-                p = new OrderPlan(p, (ColNameExpr)ExprPlanner.getExpression(t, upFuncs, p),
+                p = new OrderPlan(p, (ColNameExpr) ExprParser.getExpression(t, upFuncs, p),
                         asc, parentPlan);
             }
         }
 
         List<ColNameExpr> projs = new ArrayList<ColNameExpr>();
         for (int i = 0; i <= numProjs; ++i) {
-            CommonTree subTree = (CommonTree)tree.getChild(i);
+            CommonTree subTree = (CommonTree) tree.getChild(i);
             if (subTree.getType() == FatwormParser.AS) {
                 projs.add(new ColNameExpr(null, subTree.getChild(1).getText()));
             } else if (renaming.containsKey(subTree)) {
                 projs.add(new ColNameExpr(null, renaming.get(subTree)));
             } else {
-                projs.add((ColNameExpr)ExprPlanner.getExpression(subTree, funcs, p));
+                projs.add((ColNameExpr) ExprParser.getExpression(subTree, funcs, p));
             }
         }
         p = new ProjectPlan(p, projs, parentPlan);
@@ -138,7 +139,7 @@ public class QueryPlanner {
                 p = new OriginProductPlan(plans, parentPlan);
             }
         } else {
-            if (Manager.getDBManager().getCurrentDB().getTable(EmptyTableName) == null)
+            if (Fucker.getDBManager().getCurrentDB().getTable(EmptyTableName) == null)
                 dealEmptyTableNull(parentPlan);
             p = new TablePlan(EmptyTableName, parentPlan);
         }
@@ -147,7 +148,7 @@ public class QueryPlanner {
 
     private void dealEmptyTableNull(Plan parentPlan) {
         Schema sch = new Schema();
-        Manager.getDBManager().getCurrentDB().addTable(EmptyTableName, sch);
+        Fucker.getDBManager().getCurrentDB().addTable(EmptyTableName, sch);
         TablePlan tp = new TablePlan(EmptyTableName, parentPlan);
         TableScan ts = (TableScan) tp.open(null);
         ts.insert(new ArrayList<Const>());
@@ -174,10 +175,11 @@ public class QueryPlanner {
         }
         return new TablePlan(tree.getText(), parentPlan);
     }
+
     protected Plan getRenamePlan(CommonTree tree, Plan p, Plan insertGroup, Plan insertHaving,
                                  Map<CommonTree, String> renaming, List<FuncExpr> upFuncs, Plan parentPlan) {
         if (tree.getType() == FatwormParser.AS) {
-            Expr from = ExprPlanner.getExpression((CommonTree)tree.getChild(0), upFuncs, p);
+            Expr from = ExprParser.getExpression((CommonTree) tree.getChild(0), upFuncs, p);
             String to = tree.getChild(1).getText();
             if (from instanceof ColNameExpr && insertGroup != null) {
                 Plan subP = insertGroup.getPlan();
@@ -194,7 +196,7 @@ public class QueryPlanner {
             }
 
         }
-        Expr expr = ExprPlanner.getExpression(tree, upFuncs, p);
+        Expr expr = ExprParser.getExpression(tree, upFuncs, p);
         if (expr instanceof ColNameExpr) {
             return p;
         }
@@ -202,7 +204,9 @@ public class QueryPlanner {
         renaming.put(tree, newName);
         return new ExtendPlan(p, expr, newName, parentPlan);
     }
+
     protected static String EmptyTableName = "emptyTable_shit";
+
     protected String getNewName() {
         return "temp_shit_" + Integer.toString(num++);
     }

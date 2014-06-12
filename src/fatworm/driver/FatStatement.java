@@ -1,8 +1,8 @@
 package fatworm.driver;
 
-import fatworm.handler.Manager;
+import fatworm.handler.Fucker;
 import fatworm.plan.Plan;
-import fatworm.planner.Planner;
+import fatworm.planner.Sucker;
 import fatworm.scan.Scan;
 
 import java.sql.*;
@@ -24,12 +24,16 @@ public class FatStatement implements Statement {
     @Override
     public boolean execute(String sql) throws SQLException {
 //        System.out.println("fuck");
-        Planner planner = Manager.createPlanner();
+        Sucker planner = Fucker.createPlanner();
         planner.execute(sql);
         hasResultSet = planner.isQuery;
-        if (hasResultSet) {
-            plan = planner.getQueryPlan();
-            scan = plan.open(null);
+        try {
+            if (hasResultSet) {
+                plan = planner.getQueryPlan();
+                scan = plan.open(null);
+            }
+        } catch (Exception e) {
+            hasResultSet = false;
         }
         return hasResultSet;
     }

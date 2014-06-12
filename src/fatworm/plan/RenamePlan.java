@@ -11,22 +11,18 @@ import java.util.HashSet;
 public class RenamePlan implements Plan {
     private String newName;
     private Plan p;
-    private Plan father;
+    private Plan parentPlan;
 
-    public RenamePlan(Plan p, String name, Plan father) {
+    public RenamePlan(Plan p, String name, Plan parentPlan) {
         this.p = p;
         this.newName = name.toLowerCase();
-        this.father = father;
-    }
-
-    public String getNewName() {
-        return newName;
+        this.parentPlan = parentPlan;
     }
 
     @Override
-    public Scan open(Scan father) {
-        Scan s = p.open(father);
-        s = new RenameScan(s, newName, father);
+    public Scan open(Scan parentScan) {
+        Scan s = p.open(parentScan);
+        s = new RenameScan(s, newName, parentScan);
         return s;
     }
 
@@ -58,6 +54,6 @@ public class RenamePlan implements Plan {
 
     @Override
     public Plan getParentPlan() {
-        return father;
+        return parentPlan;
     }
 }

@@ -14,19 +14,19 @@ public class OrderPlan implements Plan {
     private Plan p;
     private ColNameExpr colName;
     private boolean asc;
-    private Plan father;
+    private Plan parentPlan;
 
-    public OrderPlan(Plan p, ColNameExpr colName, boolean asc, Plan father) {
+    public OrderPlan(Plan p, ColNameExpr colName, boolean asc, Plan parentPlan) {
         this.p = p;
         this.colName = colName;
         this.asc = asc;
-        this.father = father;
+        this.parentPlan = parentPlan;
     }
 
     @Override
-    public Scan open(Scan father) {
-        Scan s = p.open(father);
-        s = new OrderScan(s, colName, asc, father);
+    public Scan open(Scan parentScan) {
+        Scan s = p.open(parentScan);
+        s = new OrderScan(s, colName, asc, parentScan);
         return s;
     }
 
@@ -58,6 +58,6 @@ public class OrderPlan implements Plan {
 
     @Override
     public Plan getParentPlan() {
-        return father;
+        return parentPlan;
     }
 }

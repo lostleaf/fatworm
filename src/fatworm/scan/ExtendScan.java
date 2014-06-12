@@ -101,8 +101,8 @@ public class ExtendScan implements Scan {
 		Const c = s.getColumn(exp, findParent);
 		return c;
 //		if (c != null || (!(s instanceof TableScan))) return c;
-//		if (father == null) return null;
-//		return father.getColumn(exp);
+//		if (parentPlan == null) return null;
+//		return parentPlan.getColumn(exp);
 	}
 
 	@Override
@@ -114,8 +114,8 @@ public class ExtendScan implements Scan {
 		int t = s.getColumnType(exp, findParent);
 		return t;
 //		if (t != notFound || (!(s instanceof TableScan))) return t;
-//		if (father == null) return notFound;
-//		return father.getColumnType(exp);
+//		if (parentPlan == null) return notFound;
+//		return parentPlan.getColumnType(exp);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package fatworm.constant;
 
-import fatworm.expr.Function;
+import fatworm.util.Function;
 
 import java.sql.Types;
 

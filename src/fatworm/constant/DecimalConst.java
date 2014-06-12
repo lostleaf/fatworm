@@ -1,7 +1,7 @@
 package fatworm.constant;
 
-import fatworm.expr.Function;
-import fatworm.expr.Operator;
+import fatworm.util.Function;
+import fatworm.util.Operator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

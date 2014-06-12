@@ -6,9 +6,9 @@ import fatworm.constant.IntegerConst;
 import fatworm.constant.NullConst;
 import fatworm.expr.Expr;
 import fatworm.expr.FuncExpr;
-import fatworm.expr.Function;
-import fatworm.expr.Operator;
-import fatworm.planner.ExprPlanner;
+import fatworm.util.Function;
+import fatworm.util.Operator;
+import fatworm.planner.ExprParser;
 import fatworm.type.DecimalType;
 import fatworm.type.Type;
 import org.antlr.runtime.tree.CommonTree;
@@ -53,7 +53,7 @@ public class Attribute implements Serializable {
 
     public Const getNewConstant(CommonTree tree) {
         if (tree.getText().toLowerCase().equals("null")) return new NullConst();
-        Expr expr = ExprPlanner.getExpression(tree, new ArrayList<FuncExpr>(), null);
+        Expr expr = ExprParser.getExpression(tree, new ArrayList<FuncExpr>(), null);
         Const c = expr.getResult(null);
         switch (type.getType()) {
             case Types.INTEGER:

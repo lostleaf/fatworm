@@ -9,7 +9,7 @@ import java.util.HashSet;
  */
 public interface Plan {
 
-    public Scan open(Scan father);
+    public Scan open(Scan parentScan);
 
     public Plan getPlan();
 

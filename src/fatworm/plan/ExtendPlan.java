@@ -11,17 +11,13 @@ public class ExtendPlan implements Plan {
 	private Plan p;
 	private String newName;
 	private Expr expr;
-	private Plan father;
+	private Plan parentPlan;
 	
-	public ExtendPlan(Plan p, Expr expr, String newName, Plan father) {
+	public ExtendPlan(Plan p, Expr expr, String newName, Plan parentPlan) {
 		this.p = p;
 		this.expr = expr;
-		if (newName != null) {
-			this.newName = newName.toLowerCase();
-		} else {
-			this.newName = null;
-		}
-		this.father = father;
+        this.newName = newName != null ? newName.toLowerCase() : null;
+		this.parentPlan = parentPlan;
 	}
 	
 	public Expr getExpr() {
@@ -29,9 +25,9 @@ public class ExtendPlan implements Plan {
 	}
 
     @Override
-	public Scan open(Scan father) {
-		Scan s = p.open(father);
-		s = new ExtendScan(s, expr, newName, father);
+	public Scan open(Scan parentScan) {
+		Scan s = p.open(parentScan);
+		s = new ExtendScan(s, expr, newName, parentScan);
 		return s;
 	}
 	
@@ -63,6 +59,6 @@ public class ExtendPlan implements Plan {
 
 	@Override
 	public Plan getParentPlan() {
-		return father;
+		return parentPlan;
 	}
 }

@@ -30,9 +30,9 @@ public class GroupPlan implements Plan {
     }
 
     @Override
-    public Scan open(Scan father) {
-        Scan s = p.open(father);
-        s = new GroupScan(s, colName, funcs, father);
+    public Scan open(Scan parentScan) {
+        Scan s = p.open(parentScan);
+        s = new GroupScan(s, colName, funcs, parentScan);
         return s;
     }
 

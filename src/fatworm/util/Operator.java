@@ -1,4 +1,4 @@
-package fatworm.expr;
+package fatworm.util;
 
 import fatworm.parser.FatwormParser;
 
