@@ -78,19 +78,8 @@ public class Fucker {
         return getDBFileName(dbName) + ".log";
     }
 
-    public static String getCurDBLogFileName() {
-        return getDBLogFileName(dbManager.getCurrentDBName());
-    }
-
     public static void storeSQL(String sql) {
-//        File logFile = new File(root, getCurDBLogFileName());
-//        try {
-//            FileWriter writer = new FileWriter(logFile, true);
-//            writer.write(sql);
-//            writer.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        storeSQL(sql, dbManager.getCurrentDBName());
     }
 
     public static Sucker createPlanner() {
@@ -99,5 +88,41 @@ public class Fucker {
 
     public static DBFucker getDBManager() {
         return dbManager;
+    }
+
+    public static void restoreDB(String dbName) {
+        try {
+//                System.out.println("read from file " + dbName);
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
+                    new File(Fucker.getRootFile(), Fucker.getDBFileName(dbName))));
+            Memory.dbs.put(dbName, (HashMap<String, List<List<Const>>>) ois.readObject());
+            Memory.records = Memory.dbs.get(dbName);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        File logFile = new File(root, getDBLogFileName(dbName));
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(logFile));
+            String sql;
+            while((sql = reader.readLine()) != null){
+                Sucker sucker = createPlanner();
+                sucker.restore(sql);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void storeSQL(String sql, String dbName) {
+        File logFile = new File(root, getDBLogFileName(dbName));
+        try {
+            FileWriter writer = new FileWriter(logFile, true);
+//            String s =  + "\n";
+            writer.write(sql.replace("\n", " ").trim() + "\n");
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

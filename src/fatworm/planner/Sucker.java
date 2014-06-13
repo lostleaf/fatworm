@@ -34,7 +34,7 @@ public class Sucker {
         return queryPlan;
     }
 
-    public void doExecute(String sql) {
+    public void doExecute(String sql, boolean isRecover) {
         try {
             while (sql.endsWith(";"))
                 sql = sql.substring(0, sql.length() - 1);
@@ -46,6 +46,12 @@ public class Sucker {
             CommonTree t = (CommonTree) parser.statement().getTree();
 
             doExecute(t, new ArrayList<FuncExpr>(), null);
+            if (!isQuery && !isRecover){
+                if(t.getType() != FatwormParser.CREATE_DATABASE)
+                Fucker.storeSQL(sql);
+                else
+                    Fucker.storeSQL(sql, t.getChild(0).getText());
+            }
         } catch (Exception e) {
             isQuery = false;
             e.printStackTrace();
@@ -53,9 +59,11 @@ public class Sucker {
     }
 
     public void execute(String sql){
-        doExecute(sql);
-        if (isQuery)
-            Fucker.storeSQL(sql);
+        doExecute(sql, false);
+    }
+
+    public void restore(String sql){
+        doExecute(sql, true);
     }
 
     public void doExecute(CommonTree t, List<FuncExpr> funcs, Plan plan) {

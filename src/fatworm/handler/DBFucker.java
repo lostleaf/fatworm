@@ -32,17 +32,8 @@ public class DBFucker implements Serializable {
         currentDB = dbs.get(dbName);
         if (Memory.dbs.containsKey(dbName))
             Memory.records = Memory.dbs.get(dbName);
-        else {
-            try {
-                System.out.println("read from file " + dbName);
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(
-                        new File(Fucker.getRootFile(), Fucker.getDBFileName(dbName))));
-                Memory.dbs.put(dbName, (HashMap<String, List<List<Const>>>) ois.readObject());
-                Memory.records = Memory.dbs.get(dbName);
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+        else
+            Fucker.restoreDB(dbName);
     }
 
     public void addDatabase(String dbName) {
